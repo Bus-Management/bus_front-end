@@ -8,6 +8,10 @@ const userAPI = {
   getListRoutesBus: (driverId) => {
     const url = `/user/driver/${driverId}/assigned-route`
     return axiosClient.get(url)
+  },
+  getDetailUser: (userId) => {
+    const url = `/user/student/${userId}`
+    return axiosClient.get(url)
   }
 }
 
