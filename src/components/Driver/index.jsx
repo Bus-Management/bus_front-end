@@ -25,8 +25,11 @@ function Driver() {
       render: (data) => {
         return (
           <>
-            <Button type='primary' onClick={() => showModal(data)}>
+            <Button type='primary' onClick={() => handleShowListUsers(data)} className='mb-2 !bg-yellow-500 '>
               Xem danh sách học sinh
+            </Button>
+            <Button type='primary' onClick={() => handleShowListStops(data)}>
+              Xem danh sách điểm đón trả
             </Button>
           </>
         )
@@ -41,26 +44,64 @@ function Driver() {
     },
     {
       title: 'Tên học sinh',
-      dataIndex: 'route_name'
+      dataIndex: 'name'
     },
     {
       title: 'Tuổi',
-      dataIndex: 'route_name'
+      dataIndex: 'age'
     },
     {
       title: 'Lớp',
-      dataIndex: 'route_name'
+      dataIndex: 'class'
+    }
+  ]
+
+  const columnStops = [
+    {
+      title: 'Địa chỉ',
+      dataIndex: 'address'
+    },
+    {
+      title: 'Thời gian đón',
+      dataIndex: 'pickup_time'
+    },
+    {
+      title: 'Thời gian trả',
+      dataIndex: 'dropOff_time'
     }
   ]
 
   const [listRoutesBus, setListRoutesBus] = useState([])
   const [listStudents, setListStudents] = useState([])
+  const [listStops, setListStops] = useState([])
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [actionTable, setActionTable] = useState('ListUsers')
 
-  const showModal = (data) => {
+  const handleShowListUsers = async (data) => {
+    setActionTable('ListUsers')
     setIsModalOpen(true)
-    console.log(data)
+    const newListStudent = []
+    await Promise.all(
+      data.students.map(async (item) => {
+        const student = await userAPI.getDetailUser(item.student_id)
+        newListStudent.push(student)
+      })
+    )
+    setListStudents(newListStudent)
   }
+
+  const handleShowListStops = async (data) => {
+    setActionTable('ListStops')
+    setIsModalOpen(true)
+    const newListStops = []
+    await Promise.all(
+      data.stops.map(async (item) => {
+        newListStops.push(item)
+      })
+    )
+    setListStops(newListStops)
+  }
+
   const handleOk = () => {
     setIsModalOpen(false)
   }
@@ -88,8 +129,8 @@ function Driver() {
           <Table columns={columns} dataSource={listRoutesBus} />
         </div>
       </div>
-      <Modal width={800} title='Danh sách học sinh' open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-        <Table columns={columnStudents} dataSource={listRoutesBus} />
+      <Modal width={800} title={`Danh sách ${actionTable === 'ListUsers' ? 'học sinh' : 'điểm đón'}`} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+        <Table columns={actionTable === 'ListUsers' ? columnStudents : columnStops} dataSource={actionTable === 'ListUsers' ? listStudents : listStops} pagination={false} />
       </Modal>
     </>
   )
