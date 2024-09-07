@@ -3,7 +3,8 @@ import Home from './page/Home'
 import Login from './page/Auth/Login'
 import DefaultLayout from './layout/DefaultLayout'
 import Register from './page/Auth/Register'
-import Driver from './components/Driver'
+import Driver from './page/Driver'
+import BusRoute from '~/page/Admin/BusRoute'
 
 function App() {
   const router = createBrowserRouter([
@@ -14,7 +15,8 @@ function App() {
         { path: '', element: <Home /> },
         { path: 'login', element: <Login /> },
         { path: 'register', element: <Register /> },
-        { path: 'bus-routes', element: <Driver /> }
+        { path: 'bus-routes', element: <Driver /> },
+        { path: 'admin/bus-routes', element: <BusRoute /> }
       ]
     }
   ])

@@ -5,6 +5,8 @@ import userAPI from '~/api/userAPI'
 import { AuthContext } from '~/context/AuthContext'
 
 function Driver() {
+  const { currentUser } = useContext(AuthContext)
+
   const columns = [
     {
       title: 'ID Tuyến đường',
@@ -27,7 +29,7 @@ function Driver() {
       dataIndex: 'end_point'
     },
     {
-      title: 'Chi tiết',
+      title: 'Chức năng',
       render: (data) => {
         return (
           <div className='w-48'>
@@ -76,7 +78,6 @@ function Driver() {
       dataIndex: 'dropOff_time'
     }
   ]
-  const { currentUser } = useContext(AuthContext)
 
   const [listRoutesBus, setListRoutesBus] = useState([])
   const [listStudents, setListStudents] = useState([])
