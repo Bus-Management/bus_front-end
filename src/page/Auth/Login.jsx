@@ -1,13 +1,28 @@
 import { Button, ConfigProvider, Input } from 'antd'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import userAPI from '~/api/userAPI'
+
+import { AuthContext } from '~/context/AuthContext'
 
 function Login() {
+  const { updateUser } = useContext(AuthContext)
+
   const [userName, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
-  const handleLogin = () => {
+  const navigate = useNavigate()
+
+  const handleLogin = async () => {
     try {
-    } catch (error) {}
+      const res = await userAPI.logIn({ userName, password })
+      updateUser(res.user)
+      toast.success('Đăng nhập thành công !')
+      navigate('/')
+    } catch (error) {
+      toast.error(error.response.data.message)
+    }
   }
 
   return (

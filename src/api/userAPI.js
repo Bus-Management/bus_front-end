@@ -5,6 +5,14 @@ const userAPI = {
     const url = '/user/sign-up'
     return axiosClient.post(url, data)
   },
+  logIn: (data) => {
+    const url = '/user/login'
+    return axiosClient.post(url, data)
+  },
+  logOut: () => {
+    const url = '/user/logout'
+    return axiosClient.post(url)
+  },
   getListRoutesBus: (driverId) => {
     const url = `/user/driver/${driverId}/assigned-route`
     return axiosClient.get(url)
