@@ -1,6 +1,8 @@
 import { Button, Modal, Table } from 'antd'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
+import { toast } from 'react-toastify'
 import userAPI from '~/api/userAPI'
+import { AuthContext } from '~/context/AuthContext'
 
 function Driver() {
   const columns = [
@@ -11,6 +13,10 @@ function Driver() {
     {
       title: 'Tên tuyến đường',
       dataIndex: 'route_name'
+    },
+    {
+      title: 'Ngày bắt đầu',
+      dataIndex: 'startDay'
     },
     {
       title: 'Điểm bắt đầu',
@@ -24,14 +30,14 @@ function Driver() {
       title: 'Chi tiết',
       render: (data) => {
         return (
-          <>
-            <Button type='primary' onClick={() => handleShowListUsers(data)} className='mb-2 !bg-yellow-500 '>
+          <div className='w-48'>
+            <Button type='primary' onClick={() => handleShowListUsers(data)} className='mb-2 !bg-yellow-500 w-full'>
               Xem danh sách học sinh
             </Button>
-            <Button type='primary' onClick={() => handleShowListStops(data)}>
+            <Button type='primary' onClick={() => handleShowListStops(data)} className='w-full'>
               Xem danh sách điểm đón trả
             </Button>
-          </>
+          </div>
         )
       }
     }
@@ -70,6 +76,7 @@ function Driver() {
       dataIndex: 'dropOff_time'
     }
   ]
+  const { currentUser } = useContext(AuthContext)
 
   const [listRoutesBus, setListRoutesBus] = useState([])
   const [listStudents, setListStudents] = useState([])
@@ -111,10 +118,10 @@ function Driver() {
 
   const fetchListRoutesBus = async () => {
     try {
-      const res = await userAPI.getListRoutesBus('755e5eb5-c5c9-4dc3-9afd-86d0c27449e6')
+      const res = await userAPI.getListRoutesBus(currentUser.id)
       setListRoutesBus(res.assignedRoutes)
     } catch (error) {
-      console.log(error)
+      toast.error(error.response.data.message)
     }
   }
 

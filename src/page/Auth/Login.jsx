@@ -1,6 +1,6 @@
 import { Button, ConfigProvider, Input } from 'antd'
 import { useContext, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import userAPI from '~/api/userAPI'
 
@@ -9,14 +9,14 @@ import { AuthContext } from '~/context/AuthContext'
 function Login() {
   const { updateUser } = useContext(AuthContext)
 
-  const [userName, setUsername] = useState('')
+  const [phone, setPhone] = useState('')
   const [password, setPassword] = useState('')
 
   const navigate = useNavigate()
 
   const handleLogin = async () => {
     try {
-      const res = await userAPI.logIn({ userName, password })
+      const res = await userAPI.logIn({ phone, password })
       updateUser(res.user)
       toast.success('Đăng nhập thành công !')
       navigate('/')
@@ -30,8 +30,8 @@ function Login() {
       <div className='container'>
         <div className='p-8 size-2/6 mx-auto'>
           <div className='mb-2'>
-            <span className='text-sm'>Tên đăng nhập</span>
-            <Input value={userName} onChange={(e) => setUsername(e.target.value)} />
+            <span className='text-sm'>Số điện thoại</span>
+            <Input value={phone} onChange={(e) => setPhone(e.target.value)} />
           </div>
           <div className='mb-4'>
             <span className='text-sm'>Mật khẩu</span>
@@ -41,6 +41,11 @@ function Login() {
             <Button className='w-full' type='primary' onClick={handleLogin}>
               Đăng nhập
             </Button>
+            <NavLink to='/register'>
+              <Button type='primary' className='!bg-red-600 mt-4 w-full'>
+                Đăng ký
+              </Button>
+            </NavLink>
           </ConfigProvider>
         </div>
       </div>

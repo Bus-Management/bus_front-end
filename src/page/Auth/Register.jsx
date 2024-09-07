@@ -2,10 +2,14 @@ import { useState } from 'react'
 import { Button, ConfigProvider, Input, Select } from 'antd'
 import _ from 'lodash'
 import userAPI from '~/api/userAPI'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 function Register() {
+  const navigate = useNavigate()
+
   const defaultUserValue = {
-    userName: '',
+    fullName: '',
     phone: '',
     address: '',
     password: '',
@@ -22,8 +26,10 @@ function Register() {
   const handleRegister = async () => {
     try {
       await userAPI.signUp(userValue)
+      toast.success('Đăng ký thành công')
+      navigate('/login')
     } catch (error) {
-      console.log(error.message)
+      console.log(error)
     }
   }
 
@@ -32,8 +38,8 @@ function Register() {
       <div className='container'>
         <div className='p-8 size-2/6 mx-auto'>
           <div className='mb-2'>
-            <span className='text-sm'>Tên đăng nhập</span>
-            <Input onChange={(e) => handleChangeInput('userName', e.target.value)} />
+            <span className='text-sm'>Họ và Tên</span>
+            <Input onChange={(e) => handleChangeInput('fullName', e.target.value)} />
           </div>
           <div className='mb-4'>
             <span className='text-sm'>Số điện thoại</span>
