@@ -20,6 +20,10 @@ const userAPI = {
   getDetailUser: (userId) => {
     const url = `/user/student/${userId}`
     return axiosClient.get(url)
+  },
+  getAllBusRoutes: () => {
+    const url = '/user/bus-route'
+    return axiosClient.get(url)
   }
 }
 
