@@ -24,6 +24,14 @@ const userAPI = {
   getAllBusRoutes: () => {
     const url = '/user/bus-route'
     return axiosClient.get(url)
+  },
+  getAllDrivers: () => {
+    const url = '/user/driver'
+    return axiosClient.get(url)
+  },
+  createBusRoute: (data) => {
+    const url = '/user/create-route'
+    return axiosClient.post(url, data)
   }
 }
 
