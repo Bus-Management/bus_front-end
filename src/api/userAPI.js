@@ -32,6 +32,10 @@ const userAPI = {
   createBusRoute: (data) => {
     const url = '/user/create-route'
     return axiosClient.post(url, data)
+  },
+  deleteBusRoute: (routeId) => {
+    const url = `/user/delete-bus-route/${routeId}`
+    return axiosClient.delete(url)
   }
 }
 
