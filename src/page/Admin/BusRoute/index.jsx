@@ -6,6 +6,7 @@ import { toast } from 'react-toastify'
 import userAPI from '~/api/userAPI'
 import ModalBusRoute from './ModalBusRoute/ModalBusRoute'
 import ModalDeleteBusRoute from './ModalDeleteBusRoute/ModalDeleteBusRoute'
+import ModalDetailBusRoute from './ModalDetailBusRoute/ModalDetailBusRoute'
 
 function Driver() {
   const columns = [
@@ -19,7 +20,7 @@ function Driver() {
     },
     {
       title: 'Ngày bắt đầu',
-      dataIndex: 'startDay'
+      dataIndex: 'start_day'
     },
     {
       title: 'Điểm bắt đầu',
@@ -34,7 +35,7 @@ function Driver() {
       render: (data) => {
         return (
           <div className='w-48'>
-            <EyeOutlined className='text-green-500 text-2xl cursor-pointer mr-4' />
+            <EyeOutlined className='text-green-500 text-2xl cursor-pointer mr-4' onClick={() => handleShowModalDetail(data)} />
             <EditOutlined className='text-yellow-500 text-2xl cursor-pointer mr-4' />
             <DeleteOutlined className='text-red-500 text-2xl cursor-pointer' onClick={() => handleShowModalDelete(data)} />
           </div>
@@ -46,7 +47,9 @@ function Driver() {
   const [listDrivers, setListDrivers] = useState([])
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false)
+  const [isModalDetailOpen, setIsModalDetailOpen] = useState(false)
   const [dataDeleteModal, setdataDeleteModal] = useState({})
+  const [dataDetailModal, setDataDetailModal] = useState({})
 
   const showModal = () => {
     setIsModalOpen(true)
@@ -55,6 +58,11 @@ function Driver() {
   const handleShowModalDelete = (data) => {
     setIsModalDeleteOpen(true)
     setdataDeleteModal(data)
+  }
+
+  const handleShowModalDetail = (data) => {
+    setIsModalDetailOpen(true)
+    setDataDetailModal(data)
   }
 
   const fetchListRoutesBus = async () => {
@@ -84,6 +92,7 @@ function Driver() {
       </div>
       <ModalBusRoute isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} listDrivers={listDrivers} fetchListRoutesBus={fetchListRoutesBus} />
       <ModalDeleteBusRoute isModalOpen={isModalDeleteOpen} setIsModalOpen={setIsModalDeleteOpen} data={dataDeleteModal} fetchListRoutesBus={fetchListRoutesBus} />
+      <ModalDetailBusRoute isModalOpen={isModalDetailOpen} setIsModalOpen={setIsModalDetailOpen} data={dataDetailModal} listDrivers={listDrivers} />
     </>
   )
 }
