@@ -15,7 +15,7 @@ function ModalDetailBusRoute({ isModalOpen, setIsModalOpen, data }) {
     },
     {
       title: 'Tên Học sinh',
-      dataIndex: 'name'
+      dataIndex: 'fullName'
     },
     {
       title: 'Tuổi',
@@ -46,6 +46,7 @@ function ModalDetailBusRoute({ isModalOpen, setIsModalOpen, data }) {
       console.log(error)
     }
   }
+  console.log(data)
 
   const getListStudents = async () => {
     const res = await fetchListStudents(data)
