@@ -29,6 +29,15 @@ const userAPI = {
     const url = '/user/driver'
     return axiosClient.get(url)
   },
+  getAllChildrens: () => {
+    const url = '/user/children'
+    return axiosClient.get(url)
+  },
+  getAllParents: () => {
+    const url = '/user/parent'
+    return axiosClient.get(url)
+  },
+
   createBusRoute: (data) => {
     const url = '/user/create-route'
     return axiosClient.post(url, data)

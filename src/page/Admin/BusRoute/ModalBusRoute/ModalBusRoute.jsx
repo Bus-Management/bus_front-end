@@ -20,7 +20,7 @@ function ModalBusRoute({ isModalOpen, setIsModalOpen, fetchListRoutesBus, listDr
     },
     {
       title: 'Tên Học sinh',
-      dataIndex: 'name'
+      dataIndex: 'fullName'
     },
     {
       title: 'Tuổi',
@@ -149,7 +149,7 @@ function ModalBusRoute({ isModalOpen, setIsModalOpen, fetchListRoutesBus, listDr
           <span>Ngày bắt đầu</span>
           <DatePicker
             className='w-full'
-            value={dayjs(dataBusRoute.start_day, dateFormat) || dayjs(dataBusRoute.start_day, dateFormat)}
+            value={dataBusRoute.start_day && dayjs(dataBusRoute.start_day, dateFormat)}
             onChange={(date, dateString) => handleChangeInput('start_day', dateString)}
           />
         </div>

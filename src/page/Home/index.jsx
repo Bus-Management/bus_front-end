@@ -43,12 +43,14 @@ function Home() {
                     <span className='text-xl'>Quản lý tuyến đường</span>
                   </div>
                 </NavLink>
-                <div className='bg-emerald-500 p-4 rounded-lg text-white flex flex-col cursor-pointer shadow-xl'>
-                  <span className='text-4xl  mb-4'>
-                    <UserOutlined />
-                  </span>
-                  <span className='text-xl'>Quản lý người dùng</span>
-                </div>
+                <NavLink to='admin/users'>
+                  <div className='bg-emerald-500 p-4 rounded-lg text-white flex flex-col cursor-pointer shadow-xl'>
+                    <span className='text-4xl  mb-4'>
+                      <UserOutlined />
+                    </span>
+                    <span className='text-xl'>Quản lý người dùng</span>
+                  </div>
+                </NavLink>
               </>
             )}
           </div>
