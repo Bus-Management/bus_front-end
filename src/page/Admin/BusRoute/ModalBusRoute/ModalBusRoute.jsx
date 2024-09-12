@@ -1,6 +1,6 @@
-import { DatePicker, Input, Modal, Select, TimePicker } from 'antd'
+import { DatePicker, Input, Modal, Select, Table, TimePicker } from 'antd'
 import { DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { toast } from 'react-toastify'
 import _ from 'lodash'
@@ -10,8 +10,31 @@ dayjs.extend(customParseFormat)
 const dateFormat = 'YYYY-MM-DD'
 
 import userAPI from '~/api/userAPI'
+import fetchListStudents from '~/utils/fetchListStudents'
 
-function ModalBusRoute({ isModalOpen, setIsModalOpen, fetchListRoutesBus, listDrivers }) {
+function ModalBusRoute({ isModalOpen, setIsModalOpen, fetchListRoutesBus, listDrivers, action, data }) {
+  const columns = [
+    {
+      title: 'ID Học sinh',
+      dataIndex: 'id'
+    },
+    {
+      title: 'Tên Học sinh',
+      dataIndex: 'name'
+    },
+    {
+      title: 'Tuổi',
+      dataIndex: 'age'
+    },
+    {
+      title: 'Lớp',
+      dataIndex: 'class'
+    },
+    {
+      title: 'Địa chỉ',
+      dataIndex: 'address'
+    }
+  ]
   const dataBusRouteDefault = {
     route_name: '',
     bus_capacity: '',
@@ -19,12 +42,14 @@ function ModalBusRoute({ isModalOpen, setIsModalOpen, fetchListRoutesBus, listDr
     start_point: '',
     end_point: '',
     start_day: '',
-    stops: []
+    stops: [],
+    students: []
   }
   const [dataBusRoute, setDataBusRoute] = useState(dataBusRouteDefault)
 
   const dataStopsDefault = { address: '', pickup_time: '', dropOff_time: '' }
   const [listStops, setListStops] = useState({ stop0: dataStopsDefault })
+  const [listStudent, setListStudent] = useState([])
 
   const buildDataListStops = () => {
     let results = []
@@ -42,9 +67,12 @@ function ModalBusRoute({ isModalOpen, setIsModalOpen, fetchListRoutesBus, listDr
     setIsModalOpen(false)
     const listStops = buildDataListStops()
     try {
-      await userAPI.createBusRoute({ ...dataBusRoute, stops: listStops })
-      toast.success('Tạo tuyến đường thành công')
-      fetchListRoutesBus()
+      const res = action === 'CREATE' ? await userAPI.createBusRoute({ ...dataBusRoute, stops: listStops }) : await userAPI.updateBusRoute(dataBusRoute.id, dataBusRoute)
+      if (res) {
+        toast.success('Thành công')
+        fetchListRoutesBus()
+        setDataBusRoute(dataBusRouteDefault)
+      }
     } catch (error) {
       console.log(error)
     }
@@ -58,11 +86,22 @@ function ModalBusRoute({ isModalOpen, setIsModalOpen, fetchListRoutesBus, listDr
     let _listStops = _.cloneDeep(listStops)
     _listStops[`stop${uuidv4()}`] = dataStopsDefault
     setListStops(_listStops)
+    if (action === 'UPDATE') {
+      _listStops = _.cloneDeep(dataBusRoute.stops)
+      const newStops = [..._listStops, { address: '', pickup_time: '', dropOff_time: '' }]
+      setDataBusRoute({ ...dataBusRoute, stops: newStops })
+    }
   }
+
   const handleDeleteStops = (key) => {
     let _listStops = _.cloneDeep(listStops)
     delete _listStops[key]
     setListStops(_listStops)
+    if (action === 'UPDATE') {
+      _listStops = _.cloneDeep(dataBusRoute.stops)
+      _listStops.splice(key, 1)
+      setDataBusRoute({ ...dataBusRoute, stops: _listStops })
+    }
   }
 
   const handleChangeInput = (name, value) => {
@@ -72,13 +111,27 @@ function ModalBusRoute({ isModalOpen, setIsModalOpen, fetchListRoutesBus, listDr
   }
 
   const handleChangeInputStops = (name, key, value) => {
-    let _listStops = _.cloneDeep(listStops)
+    let _listStops = _.cloneDeep(action === 'UPDATE' ? dataBusRoute.stops : listStops)
     _listStops[key][name] = value
-    setListStops(_listStops)
+    if (action === 'UPDATE') {
+      setDataBusRoute({ ...dataBusRoute, stops: _listStops })
+    } else {
+      setListStops(_listStops)
+    }
   }
 
+  const getListStudents = async () => {
+    const res = await fetchListStudents(data)
+    setListStudent(res)
+  }
+
+  useEffect(() => {
+    setDataBusRoute(data)
+    getListStudents()
+  }, [data])
+
   return (
-    <Modal title='Tuyến đường mới' width='50%' open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+    <Modal title={action === 'CREATE' ? 'Tuyến đường mới' : 'Cập nhật tuyến đường'} width='50%' open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
       <div className='grid grid-cols-3 gap-4'>
         <div>
           <span>Tên tuyến đường</span>
@@ -96,7 +149,7 @@ function ModalBusRoute({ isModalOpen, setIsModalOpen, fetchListRoutesBus, listDr
           <span>Ngày bắt đầu</span>
           <DatePicker
             className='w-full'
-            defaultValue={dataBusRoute.start_day && dayjs(dataBusRoute.start_day, dateFormat)}
+            value={dayjs(dataBusRoute.start_day, dateFormat) || dayjs(dataBusRoute.start_day, dateFormat)}
             onChange={(date, dateString) => handleChangeInput('start_day', dateString)}
           />
         </div>
@@ -107,6 +160,7 @@ function ModalBusRoute({ isModalOpen, setIsModalOpen, fetchListRoutesBus, listDr
             onChange={(value) => {
               handleChangeInput('driver_id', value)
             }}
+            value={dataBusRoute.driver_id || undefined}
             options={listDrivers.map((item) => {
               return {
                 value: item.id,
@@ -119,37 +173,45 @@ function ModalBusRoute({ isModalOpen, setIsModalOpen, fetchListRoutesBus, listDr
       </div>
       <div className='mt-4'>
         <p className=' text-lg font-medium'>Thêm các điểm dừng</p>
-        <div className='w-4/5 grid grid-cols-4 gap-4'>
-          {Object.entries(listStops).map(([key, value], index) => {
+        <div className='grid grid-cols-3'>
+          {Object.entries(dataBusRoute.stops || listStops).map(([key, value], index) => {
             return (
               <>
-                <div>
-                  <span>Địa chỉ</span>
-                  <Input value={value.address} onChange={(e) => handleChangeInputStops('address', key, e.target.value)} />
+                <div className={`flex gap-4 w-full col-span-2 ${key}`}>
+                  <div>
+                    <span>Địa chỉ</span>
+                    <Input value={value.address} onChange={(e) => handleChangeInputStops('address', key, e.target.value)} />
+                  </div>
+                  <div>
+                    <span>Thời gian đón</span>
+                    <TimePicker
+                      className='w-full'
+                      value={value.pickup_time && dayjs(value.pickup_time, 'HH:mm:ss')}
+                      onChange={(time, timeString) => handleChangeInputStops('pickup_time', key, timeString)}
+                    />
+                  </div>
+                  <div>
+                    <span>Thời gian trả</span>
+                    <TimePicker
+                      className='w-full'
+                      value={value.dropOff_time && dayjs(value.dropOff_time, 'HH:mm:ss')}
+                      onChange={(time, timeString) => handleChangeInputStops('dropOff_time', key, timeString)}
+                    />
+                  </div>
                 </div>
-                <div>
-                  <span>Thời gian đón</span>
-                  <TimePicker
-                    className='w-full'
-                    defaultValue={value.pickup_time && dayjs(value.pickup_time, 'HH:mm:ss')}
-                    onChange={(time, timeString) => handleChangeInputStops('pickup_time', key, timeString)}
-                  />
-                </div>
-                <div>
-                  <span>Thời gian trả</span>
-                  <TimePicker
-                    className='w-full'
-                    defaultValue={value.dropOff_time && dayjs(value.dropOff_time, 'HH:mm:ss')}
-                    onChange={(time, timeString) => handleChangeInputStops('dropOff_time', key, timeString)}
-                  />
-                </div>
-                <div className='pt-6'>
+                <div className='pt-6 ml-4'>
                   <PlusCircleOutlined onClick={handleAddStops} className='text-2xl cursor-pointer text-green-700 mr-2' />
                   {index > 0 && <DeleteOutlined onClick={() => handleDeleteStops(key)} className='text-2xl cursor-pointer text-red-500' />}
                 </div>
               </>
             )
           })}
+        </div>
+      </div>
+      <div className='mt-4'>
+        <p className=' text-lg font-medium'>Danh sách học sinh</p>
+        <div className=''>
+          <Table columns={columns} dataSource={listStudent} />
         </div>
       </div>
     </Modal>
