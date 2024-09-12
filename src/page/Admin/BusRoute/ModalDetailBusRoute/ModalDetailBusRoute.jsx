@@ -3,6 +3,7 @@ import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 import { useEffect, useState } from 'react'
 import userAPI from '~/api/userAPI'
+import fetchListStudents from '~/utils/fetchListStudents'
 dayjs.extend(customParseFormat)
 const dateFormat = 'YYYY-MM-DD'
 
@@ -46,24 +47,14 @@ function ModalDetailBusRoute({ isModalOpen, setIsModalOpen, data }) {
     }
   }
 
-  const fetchListStudents = async () => {
-    try {
-      const results = []
-      await Promise.all(
-        data.students?.map(async (item) => {
-          const res = await userAPI.getDetailUser(item.student_id)
-          results.push(res)
-        })
-      )
-      setListStudent(results)
-    } catch (error) {
-      console.log(error)
-    }
+  const getListStudents = async () => {
+    const res = await fetchListStudents(data)
+    setListStudent(res)
   }
 
   useEffect(() => {
     fetchDataDriver()
-    fetchListStudents()
+    getListStudents()
   }, [data])
 
   return (

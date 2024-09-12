@@ -36,6 +36,10 @@ const userAPI = {
   deleteBusRoute: (routeId) => {
     const url = `/user/delete-bus-route/${routeId}`
     return axiosClient.delete(url)
+  },
+  updateBusRoute: (routeId, data) => {
+    const url = `/user/bus-route/${routeId}`
+    return axiosClient.put(url, data)
   }
 }
 

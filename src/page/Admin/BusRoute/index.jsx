@@ -36,7 +36,7 @@ function Driver() {
         return (
           <div className='w-48'>
             <EyeOutlined className='text-green-500 text-2xl cursor-pointer mr-4' onClick={() => handleShowModalDetail(data)} />
-            <EditOutlined className='text-yellow-500 text-2xl cursor-pointer mr-4' />
+            <EditOutlined className='text-yellow-500 text-2xl cursor-pointer mr-4' onClick={() => handleShowModalUpdate(data)} />
             <DeleteOutlined className='text-red-500 text-2xl cursor-pointer' onClick={() => handleShowModalDelete(data)} />
           </div>
         )
@@ -50,14 +50,23 @@ function Driver() {
   const [isModalDetailOpen, setIsModalDetailOpen] = useState(false)
   const [dataDeleteModal, setdataDeleteModal] = useState({})
   const [dataDetailModal, setDataDetailModal] = useState({})
+  const [dataUpdateModal, setDataUpdateModal] = useState({})
+  const [actionModal, setActionModal] = useState('CREATE')
 
   const showModal = () => {
+    setActionModal('CREATE')
     setIsModalOpen(true)
   }
 
   const handleShowModalDelete = (data) => {
     setIsModalDeleteOpen(true)
     setdataDeleteModal(data)
+  }
+
+  const handleShowModalUpdate = (data) => {
+    setActionModal('UPDATE')
+    setIsModalOpen(true)
+    setDataUpdateModal(data)
   }
 
   const handleShowModalDetail = (data) => {
@@ -90,7 +99,14 @@ function Driver() {
           <Table columns={columns} dataSource={listRoutesBus} />
         </div>
       </div>
-      <ModalBusRoute isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} listDrivers={listDrivers} fetchListRoutesBus={fetchListRoutesBus} />
+      <ModalBusRoute
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        listDrivers={listDrivers}
+        fetchListRoutesBus={fetchListRoutesBus}
+        action={actionModal}
+        data={dataUpdateModal}
+      />
       <ModalDeleteBusRoute isModalOpen={isModalDeleteOpen} setIsModalOpen={setIsModalDeleteOpen} data={dataDeleteModal} fetchListRoutesBus={fetchListRoutesBus} />
       <ModalDetailBusRoute isModalOpen={isModalDetailOpen} setIsModalOpen={setIsModalDetailOpen} data={dataDetailModal} listDrivers={listDrivers} />
     </>
