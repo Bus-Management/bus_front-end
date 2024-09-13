@@ -1,10 +1,10 @@
 import { Input, Modal, Select } from 'antd'
 import _ from 'lodash'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import userAPI from '~/api/userAPI'
 
-function ModalUser({ isOpen, setIsModalUserOpen, fetchAllUsers }) {
+function ModalUser({ isOpen, setIsModalUserOpen, data, action, fetchAllUsers }) {
   const dataUserDefault = {
     fullName: '',
     age: '',
@@ -18,9 +18,11 @@ function ModalUser({ isOpen, setIsModalUserOpen, fetchAllUsers }) {
   const handleOk = async () => {
     setIsModalUserOpen(false)
     try {
-      await userAPI.signUp(dataUser)
-      toast.success('Tạo người dùng thành công')
-      fetchAllUsers()
+      const res = action === 'CREATE' ? await userAPI.signUp(dataUser) : await userAPI.updateUser(dataUser.id, dataUser)
+      if (res) {
+        toast.success(res.message)
+        fetchAllUsers()
+      }
       setDataUser(dataUserDefault)
     } catch (error) {
       console.log(error)
@@ -37,34 +39,42 @@ function ModalUser({ isOpen, setIsModalUserOpen, fetchAllUsers }) {
     setDataUser(_dataUser)
   }
 
+  useEffect(() => {
+    setDataUser(data)
+  }, [data])
+
   return (
     <>
       <Modal title='Tạo mới người dùng' open={isOpen} onOk={handleOk} onCancel={handleCancel}>
         <div className='mb-2'>
           <span>Tên người dùng</span>
-          <Input onChange={(e) => handleChangeInput('fullName', e.target.value)} />
+          <Input value={dataUser.fullName} onChange={(e) => handleChangeInput('fullName', e.target.value)} />
         </div>
         <div className='mb-2'>
           <span>Tuổi</span>
-          <Input onChange={(e) => handleChangeInput('age', e.target.value)} />
+          <Input value={dataUser.age} onChange={(e) => handleChangeInput('age', e.target.value)} />
         </div>
         <div className='mb-2'>
           <span>Địa chỉ</span>
-          <Input onChange={(e) => handleChangeInput('address', e.target.value)} />
+          <Input value={dataUser.address} onChange={(e) => handleChangeInput('address', e.target.value)} />
         </div>
         <div className='mb-2'>
           <span>Số điện thoại</span>
-          <Input onChange={(e) => handleChangeInput('phone', e.target.value)} />
+          <Input value={dataUser.phone} onChange={(e) => handleChangeInput('phone', e.target.value)} />
         </div>
-        <div className='mb-2'>
-          <span>Mật khẩu</span>
-          <Input.Password onChange={(e) => handleChangeInput('password', e.target.value)} />
-        </div>
+        {action === 'CREATE' && (
+          <div className='mb-2'>
+            <span>Mật khẩu</span>
+            <Input.Password onChange={(e) => handleChangeInput('password', e.target.value)} />
+          </div>
+        )}
+
         <div className='mb-2'>
           <span>Chức vụ</span>
           <Select
             placeholder='Vui lòng chọn chức vụ'
             onChange={(value) => handleChangeInput('role', value)}
+            value={dataUser.role}
             options={[
               {
                 value: 'Tài xế',

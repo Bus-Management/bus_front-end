@@ -1,4 +1,4 @@
-import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons'
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import { Button, Table, Collapse } from 'antd'
 import { useEffect, useState } from 'react'
 import userAPI from '~/api/userAPI'
@@ -32,7 +32,7 @@ function User() {
       render: (data) => {
         return (
           <div className='w-48'>
-            <EditOutlined className='text-yellow-500 text-2xl cursor-pointer mr-4' />
+            <EditOutlined className='text-yellow-500 text-2xl cursor-pointer mr-4' onClick={() => handleUpdateUser(data)} />
             <DeleteOutlined className='text-red-500 text-2xl cursor-pointer' onClick={() => handleDeleteUser(data)} />
           </div>
         )
@@ -65,7 +65,7 @@ function User() {
       render: (data) => {
         return (
           <div className='w-48'>
-            <EditOutlined className='text-yellow-500 text-2xl cursor-pointer mr-4' />
+            <EditOutlined className='text-yellow-500 text-2xl cursor-pointer mr-4' onClick={() => handleUpdateUser(data)} />
             <DeleteOutlined className='text-red-500 text-2xl cursor-pointer' onClick={() => handleDeleteUser(data)} />
           </div>
         )
@@ -78,6 +78,8 @@ function User() {
   const [listParents, setListParents] = useState([])
   const [listDrivers, setListDrivers] = useState([])
   const [dataUserDelete, setDataUserDelete] = useState({})
+  const [dataUserUpdate, setDataUserUpdate] = useState({})
+  const [action, setAction] = useState('CREATE')
 
   const handleCreateUser = () => {
     setIsModalUserOpen(true)
@@ -86,6 +88,12 @@ function User() {
   const handleDeleteUser = (data) => {
     setIsModalUserDelete(true)
     setDataUserDelete(data)
+  }
+
+  const handleUpdateUser = (data) => {
+    setIsModalUserOpen(true)
+    setDataUserUpdate(data)
+    setAction('UPDATE')
   }
 
   const items = [
@@ -134,7 +142,7 @@ function User() {
           <Collapse items={items} />
         </div>
       </div>
-      <ModalUser isOpen={isModalUserOpen} setIsModalUserOpen={setIsModalUserOpen} fetchAllUsers={fetchAllUsers} />
+      <ModalUser isOpen={isModalUserOpen} setIsModalUserOpen={setIsModalUserOpen} data={dataUserUpdate} action={action} fetchAllUsers={fetchAllUsers} />
       <ModalDelete isModalOpen={isModalUserDelete} setIsModalOpen={setIsModalUserDelete} data={dataUserDelete} fetchAllUsers={fetchAllUsers} />
     </>
   )
