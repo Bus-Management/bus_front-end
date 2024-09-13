@@ -9,6 +9,10 @@ const userAPI = {
     const url = `/user/delete-user/${userId}`
     return axiosClient.delete(url)
   },
+  updateUser: (userId, data) => {
+    const url = `/user/update-user/${userId}`
+    return axiosClient.put(url, data)
+  },
   logIn: (data) => {
     const url = '/user/login'
     return axiosClient.post(url, data)
