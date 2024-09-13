@@ -5,8 +5,8 @@ import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import userAPI from '~/api/userAPI'
 import ModalBusRoute from './ModalBusRoute/ModalBusRoute'
-import ModalDeleteBusRoute from './ModalDeleteBusRoute/ModalDeleteBusRoute'
 import ModalDetailBusRoute from './ModalDetailBusRoute/ModalDetailBusRoute'
+import ModalDelete from '~/components/ModalDelete'
 
 function Driver() {
   const columns = [
@@ -107,7 +107,7 @@ function Driver() {
         action={actionModal}
         data={dataUpdateModal}
       />
-      <ModalDeleteBusRoute isModalOpen={isModalDeleteOpen} setIsModalOpen={setIsModalDeleteOpen} data={dataDeleteModal} fetchListRoutesBus={fetchListRoutesBus} />
+      <ModalDelete isModalOpen={isModalDeleteOpen} setIsModalOpen={setIsModalDeleteOpen} data={dataDeleteModal} fetchListRoutesBus={fetchListRoutesBus} />
       <ModalDetailBusRoute isModalOpen={isModalDetailOpen} setIsModalOpen={setIsModalDetailOpen} data={dataDetailModal} listDrivers={listDrivers} />
     </>
   )

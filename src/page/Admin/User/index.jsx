@@ -2,41 +2,10 @@ import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons'
 import { Button, Table, Collapse } from 'antd'
 import { useEffect, useState } from 'react'
 import userAPI from '~/api/userAPI'
+import ModalUser from './ModalUser/ModalUser'
+import ModalDelete from '~/components/ModalDelete'
 
 function User() {
-  const columnsChildrens = [
-    {
-      title: 'ID Học sinh',
-      dataIndex: 'id'
-    },
-    {
-      title: 'Tên Học sinh',
-      dataIndex: 'fullName'
-    },
-    {
-      title: 'Tuổi',
-      dataIndex: 'age'
-    },
-    {
-      title: 'Lớp',
-      dataIndex: 'class'
-    },
-    {
-      title: 'Địa chỉ',
-      dataIndex: 'address'
-    },
-    {
-      title: 'Chức năng',
-      render: (data) => {
-        return (
-          <div className='w-48'>
-            <EditOutlined className='text-yellow-500 text-2xl cursor-pointer mr-4' />
-            <DeleteOutlined className='text-red-500 text-2xl cursor-pointer' />
-          </div>
-        )
-      }
-    }
-  ]
   const columnsParents = [
     {
       title: 'ID Phụ huynh',
@@ -45,6 +14,10 @@ function User() {
     {
       title: 'Tên Phụ huynh',
       dataIndex: 'fullName'
+    },
+    {
+      title: 'Tuổi',
+      dataIndex: 'age'
     },
     {
       title: 'Số điện thoại',
@@ -60,7 +33,7 @@ function User() {
         return (
           <div className='w-48'>
             <EditOutlined className='text-yellow-500 text-2xl cursor-pointer mr-4' />
-            <DeleteOutlined className='text-red-500 text-2xl cursor-pointer' />
+            <DeleteOutlined className='text-red-500 text-2xl cursor-pointer' onClick={() => handleDeleteUser(data)} />
           </div>
         )
       }
@@ -76,6 +49,10 @@ function User() {
       dataIndex: 'fullName'
     },
     {
+      title: 'Tuổi',
+      dataIndex: 'age'
+    },
+    {
       title: 'Số điện thoại',
       dataIndex: 'phone'
     },
@@ -89,27 +66,29 @@ function User() {
         return (
           <div className='w-48'>
             <EditOutlined className='text-yellow-500 text-2xl cursor-pointer mr-4' />
-            <DeleteOutlined className='text-red-500 text-2xl cursor-pointer' />
+            <DeleteOutlined className='text-red-500 text-2xl cursor-pointer' onClick={() => handleDeleteUser(data)} />
           </div>
         )
       }
     }
   ]
+  const [isModalUserOpen, setIsModalUserOpen] = useState(false)
+  const [isModalUserDelete, setIsModalUserDelete] = useState(false)
 
-  const [listChildrens, setListChildrens] = useState([])
   const [listParents, setListParents] = useState([])
   const [listDrivers, setListDrivers] = useState([])
+  const [dataUserDelete, setDataUserDelete] = useState({})
+
+  const handleCreateUser = () => {
+    setIsModalUserOpen(true)
+  }
+
+  const handleDeleteUser = (data) => {
+    setIsModalUserDelete(true)
+    setDataUserDelete(data)
+  }
 
   const items = [
-    {
-      key: '1',
-      label: 'Danh sách học sinh',
-      children: (
-        <div>
-          <Table columns={columnsChildrens} dataSource={listChildrens} />
-        </div>
-      )
-    },
     {
       key: '2',
       label: 'Danh sách phụ huynh',
@@ -132,10 +111,8 @@ function User() {
 
   const fetchAllUsers = async () => {
     try {
-      const childrens = await userAPI.getAllChildrens()
       const parents = await userAPI.getAllParents()
       const drivers = await userAPI.getAllDrivers()
-      setListChildrens(childrens)
       setListParents(parents)
       setListDrivers(drivers)
     } catch (error) {
@@ -151,12 +128,14 @@ function User() {
     <>
       <div className='container'>
         <div className='mt-4'>
-          <Button type='primary' className='mb-4'>
-            Tạo người dùng
+          <Button type='primary' className='mb-4' onClick={handleCreateUser}>
+            Tạo mới người dùng
           </Button>
           <Collapse items={items} />
         </div>
       </div>
+      <ModalUser isOpen={isModalUserOpen} setIsModalUserOpen={setIsModalUserOpen} fetchAllUsers={fetchAllUsers} />
+      <ModalDelete isModalOpen={isModalUserDelete} setIsModalOpen={setIsModalUserDelete} data={dataUserDelete} fetchAllUsers={fetchAllUsers} />
     </>
   )
 }

@@ -5,6 +5,10 @@ const userAPI = {
     const url = '/user/sign-up'
     return axiosClient.post(url, data)
   },
+  deleteUser: (userId) => {
+    const url = `/user/delete-user/${userId}`
+    return axiosClient.delete(url)
+  },
   logIn: (data) => {
     const url = '/user/login'
     return axiosClient.post(url, data)

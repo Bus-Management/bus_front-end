@@ -30,7 +30,20 @@ function Home() {
             )}
             {currentUser.role === 'Phụ huynh' && (
               <>
-                <p>phu huyen</p>
+                <div className='bg-emerald-500 p-4 rounded-lg text-white flex flex-col cursor-pointer shadow-xl'>
+                  <span className='text-4xl  mb-4'>
+                    <UserOutlined />
+                  </span>
+                  <span className='text-xl'>Đăng ký tài khoản cho con</span>
+                </div>
+                <NavLink to='/register-route'>
+                  <div className='bg-blue-500 p-4 rounded-lg text-white flex flex-col cursor-pointer shadow-xl'>
+                    <span className='text-4xl  mb-4'>
+                      <TruckOutlined />
+                    </span>
+                    <span className='text-xl'>Đăng ký tuyến đường cho con</span>
+                  </div>
+                </NavLink>
               </>
             )}
             {currentUser.role === 'Admin' && (
