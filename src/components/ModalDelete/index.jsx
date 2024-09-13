@@ -2,13 +2,18 @@ import { Modal } from 'antd'
 import { toast } from 'react-toastify'
 import userAPI from '~/api/userAPI'
 
-function ModalDeleteBusRoute({ isModalOpen, setIsModalOpen, data, fetchListRoutesBus }) {
+function ModalDelete({ isModalOpen, setIsModalOpen, data, fetchListRoutesBus, fetchAllUsers }) {
   const handleOk = async () => {
     setIsModalOpen(false)
     try {
-      await userAPI.deleteBusRoute(data.id)
+      if (fetchListRoutesBus) {
+        await userAPI.deleteBusRoute(data.id)
+        fetchListRoutesBus()
+      } else if (fetchAllUsers) {
+        await userAPI.deleteUser(data.id)
+        fetchAllUsers()
+      }
       toast.success('Xóa thành công')
-      fetchListRoutesBus()
     } catch (error) {
       console.log(error)
     }
@@ -20,11 +25,11 @@ function ModalDeleteBusRoute({ isModalOpen, setIsModalOpen, data, fetchListRoute
     <>
       <Modal title='Xác nhận xóa' open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
         <p>
-          Bạn có chắc muốn xóa tuyến xe <span className='font-medium text-red-600'>{data.route_name}</span> không ?
+          Bạn có chắc muốn xóa <span className='font-medium text-red-600'>{data.route_name}</span> không ?
         </p>
       </Modal>
     </>
   )
 }
 
-export default ModalDeleteBusRoute
+export default ModalDelete
