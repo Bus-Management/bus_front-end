@@ -50,6 +50,10 @@ const userAPI = {
     const url = '/user/create-route'
     return axiosClient.post(url, data)
   },
+  createChildren: (data) => {
+    const url = '/user/register-student'
+    return axiosClient.post(url, data)
+  },
   deleteBusRoute: (routeId) => {
     const url = `/user/delete-bus-route/${routeId}`
     return axiosClient.delete(url)
