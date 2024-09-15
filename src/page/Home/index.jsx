@@ -30,12 +30,14 @@ function Home() {
             )}
             {currentUser.role === 'Phụ huynh' && (
               <>
-                <div className='bg-emerald-500 p-4 rounded-lg text-white flex flex-col cursor-pointer shadow-xl'>
-                  <span className='text-4xl  mb-4'>
-                    <UserOutlined />
-                  </span>
-                  <span className='text-xl'>Đăng ký tài khoản cho con</span>
-                </div>
+                <NavLink to='/childrens'>
+                  <div className='bg-emerald-500 p-4 rounded-lg text-white flex flex-col cursor-pointer shadow-xl'>
+                    <span className='text-4xl  mb-4'>
+                      <UserOutlined />
+                    </span>
+                    <span className='text-xl'>Quản lý thông tin của con</span>
+                  </div>
+                </NavLink>
                 <NavLink to='/register-route'>
                   <div className='bg-blue-500 p-4 rounded-lg text-white flex flex-col cursor-pointer shadow-xl'>
                     <span className='text-4xl  mb-4'>
@@ -50,7 +52,7 @@ function Home() {
               <>
                 <NavLink to='admin/bus-routes'>
                   <div className='bg-blue-500 p-4 rounded-lg text-white flex flex-col cursor-pointer shadow-xl'>
-                    <span className='text-4xl  mb-4'>
+                    <span className='text-4xl mb-4'>
                       <TruckOutlined />
                     </span>
                     <span className='text-xl'>Quản lý tuyến đường</span>

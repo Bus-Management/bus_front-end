@@ -2,7 +2,7 @@ import { Modal } from 'antd'
 import { toast } from 'react-toastify'
 import userAPI from '~/api/userAPI'
 
-function ModalDelete({ isModalOpen, setIsModalOpen, data, fetchListRoutesBus, fetchAllUsers }) {
+function ModalDelete({ isModalOpen, setIsModalOpen, data, fetchListRoutesBus, fetchAllUsers, fetchListChildrens }) {
   const handleOk = async () => {
     setIsModalOpen(false)
     try {
@@ -12,6 +12,9 @@ function ModalDelete({ isModalOpen, setIsModalOpen, data, fetchListRoutesBus, fe
       } else if (fetchAllUsers) {
         await userAPI.deleteUser(data.id)
         fetchAllUsers()
+      } else if (fetchListChildrens) {
+        await userAPI.deleteUser(data.id)
+        fetchListChildrens()
       }
       toast.success('Xóa thành công')
     } catch (error) {
@@ -25,7 +28,7 @@ function ModalDelete({ isModalOpen, setIsModalOpen, data, fetchListRoutesBus, fe
     <>
       <Modal title='Xác nhận xóa' open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
         <p>
-          Bạn có chắc muốn xóa <span className='font-medium text-red-600'>{data.route_name}</span> không ?
+          Bạn có chắc muốn xóa <span className='font-medium text-red-600'>{data.route_name || data.fullName}</span> không ?
         </p>
       </Modal>
     </>
