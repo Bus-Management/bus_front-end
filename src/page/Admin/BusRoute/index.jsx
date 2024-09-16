@@ -11,11 +11,11 @@ import ModalDelete from '~/components/ModalDelete'
 function Driver() {
   const columns = [
     {
-      title: 'ID Tuyến đường',
+      title: 'ID Tuyến xe',
       dataIndex: 'id'
     },
     {
-      title: 'Tên tuyến đường',
+      title: 'Tên tuyến xe',
       dataIndex: 'route_name'
     },
     {
@@ -94,7 +94,7 @@ function Driver() {
       <div className='container'>
         <div className='mt-4'>
           <Button type='primary' className='mb-4' onClick={showModal}>
-            Create new route
+            Tạo tuyến xe
           </Button>
           <Table columns={columns} dataSource={listRoutesBus} />
         </div>

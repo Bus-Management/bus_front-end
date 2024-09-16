@@ -80,8 +80,8 @@ function Children() {
                         </p>
                       </div>
                       <NavLink to={`/register-route/${item.id}`}>
-                        <Button type='primary' className='mt-4'>
-                          Chọn tuyến đường đăng ký
+                        <Button type='primary' className='mt-4 w-full'>
+                          Chọn tuyến xe đăng ký
                         </Button>
                       </NavLink>
                     </div>
