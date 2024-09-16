@@ -9,16 +9,16 @@ function Driver() {
 
   const columns = [
     {
-      title: 'ID Tuyến đường',
+      title: 'ID Tuyến xe',
       dataIndex: 'id'
     },
     {
-      title: 'Tên tuyến đường',
+      title: 'Tên tuyến xe',
       dataIndex: 'route_name'
     },
     {
       title: 'Ngày bắt đầu',
-      dataIndex: 'startDay'
+      dataIndex: 'start_day'
     },
     {
       title: 'Điểm bắt đầu',
@@ -52,7 +52,7 @@ function Driver() {
     },
     {
       title: 'Tên học sinh',
-      dataIndex: 'name'
+      dataIndex: 'fullName'
     },
     {
       title: 'Tuổi',

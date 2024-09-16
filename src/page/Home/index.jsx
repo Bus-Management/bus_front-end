@@ -1,10 +1,18 @@
-import { TruckOutlined, UserOutlined } from '@ant-design/icons'
-import { useContext } from 'react'
+import { EditOutlined, TruckOutlined, UserOutlined } from '@ant-design/icons'
+import { useContext, useState } from 'react'
 import { Navigate, NavLink } from 'react-router-dom'
 import { AuthContext } from '~/context/AuthContext'
+import ModalParent from './ModalParent/ModalParent'
 
 function Home() {
   const { currentUser } = useContext(AuthContext)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [dataUser, setDataUser] = useState({})
+
+  const handleEditUser = () => {
+    setIsModalOpen(true)
+    setDataUser({ ...currentUser })
+  }
 
   if (!currentUser) {
     return <Navigate to='/login' />
@@ -13,8 +21,9 @@ function Home() {
       <>
         <div className='container mt-2'>
           <div className='flex items-center my-4'>
-            <img src='/no-user.png' alt='' className='h-20 rounded-full mr-2' />
+            <img src={currentUser.avatar || '/no-user.png'} alt='' className='size-16 object-cover rounded-full mr-2' />
             <span className='text-xl font-medium'>{currentUser.fullName}</span>
+            <EditOutlined className='text-yellow-500 text-lg cursor-pointer ml-4' onClick={handleEditUser} />
           </div>
           {/* --------Các dịch vụ */}
           <div className='grid grid-cols-3 gap-4'>
@@ -24,7 +33,7 @@ function Home() {
                   <span className='text-4xl  mb-4'>
                     <TruckOutlined />
                   </span>
-                  <span className='text-xl'>Tuyến đường được phân công</span>
+                  <span className='text-xl'>Tuyến xe được phân công</span>
                 </div>
               </NavLink>
             )}
@@ -38,14 +47,6 @@ function Home() {
                     <span className='text-xl'>Quản lý thông tin của con</span>
                   </div>
                 </NavLink>
-                <NavLink to='/register-route'>
-                  <div className='bg-blue-500 p-4 rounded-lg text-white flex flex-col cursor-pointer shadow-xl'>
-                    <span className='text-4xl  mb-4'>
-                      <TruckOutlined />
-                    </span>
-                    <span className='text-xl'>Đăng ký tuyến đường cho con</span>
-                  </div>
-                </NavLink>
               </>
             )}
             {currentUser.role === 'Admin' && (
@@ -55,7 +56,7 @@ function Home() {
                     <span className='text-4xl mb-4'>
                       <TruckOutlined />
                     </span>
-                    <span className='text-xl'>Quản lý tuyến đường</span>
+                    <span className='text-xl'>Quản lý tuyến xe</span>
                   </div>
                 </NavLink>
                 <NavLink to='admin/users'>
@@ -70,6 +71,7 @@ function Home() {
             )}
           </div>
         </div>
+        <ModalParent isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} data={dataUser} />
       </>
     )
   }

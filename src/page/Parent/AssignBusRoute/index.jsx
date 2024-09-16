@@ -12,7 +12,7 @@ function AssignBusRoute() {
 
   const columns = [
     {
-      title: 'Tên tuyến đường',
+      title: 'Tên tuyến xe',
       dataIndex: 'route_name'
     },
     {

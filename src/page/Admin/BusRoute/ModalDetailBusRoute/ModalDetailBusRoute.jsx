@@ -58,10 +58,10 @@ function ModalDetailBusRoute({ isModalOpen, setIsModalOpen, data }) {
   }, [data])
 
   return (
-    <Modal title='Chi tiết thông tin tuyến đường' width='50%' open={isModalOpen} onCancel={handleCancel}>
+    <Modal title='Chi tiết thông tin tuyến xe' width='50%' open={isModalOpen} onCancel={handleCancel}>
       <div className='grid grid-cols-3 gap-4'>
         <div>
-          <span>Tên tuyến đường</span>
+          <span>Tên tuyến xe</span>
           <Input value={data.route_name} />
         </div>
         <div>

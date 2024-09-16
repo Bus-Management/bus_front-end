@@ -10,31 +10,8 @@ dayjs.extend(customParseFormat)
 const dateFormat = 'YYYY-MM-DD'
 
 import userAPI from '~/api/userAPI'
-import fetchListStudents from '~/utils/fetchListStudents'
 
 function ModalBusRoute({ isModalOpen, setIsModalOpen, fetchListRoutesBus, listDrivers, action, data }) {
-  const columns = [
-    {
-      title: 'ID Học sinh',
-      dataIndex: 'id'
-    },
-    {
-      title: 'Tên Học sinh',
-      dataIndex: 'fullName'
-    },
-    {
-      title: 'Tuổi',
-      dataIndex: 'age'
-    },
-    {
-      title: 'Lớp',
-      dataIndex: 'class'
-    },
-    {
-      title: 'Địa chỉ',
-      dataIndex: 'address'
-    }
-  ]
   const dataBusRouteDefault = {
     route_name: '',
     bus_capacity: '',
@@ -49,7 +26,6 @@ function ModalBusRoute({ isModalOpen, setIsModalOpen, fetchListRoutesBus, listDr
 
   const dataStopsDefault = { address: '', pickup_time: '', dropOff_time: '' }
   const [listStops, setListStops] = useState({ stop0: dataStopsDefault })
-  const [listStudent, setListStudent] = useState([])
 
   const buildDataListStops = () => {
     let results = []
@@ -120,21 +96,15 @@ function ModalBusRoute({ isModalOpen, setIsModalOpen, fetchListRoutesBus, listDr
     }
   }
 
-  const getListStudents = async () => {
-    const res = await fetchListStudents(data)
-    setListStudent(res)
-  }
-
   useEffect(() => {
     setDataBusRoute(data)
-    getListStudents()
   }, [data])
 
   return (
-    <Modal title={action === 'CREATE' ? 'Tuyến đường mới' : 'Cập nhật tuyến đường'} width='50%' open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+    <Modal title={action === 'CREATE' ? 'Tuyến xe mới' : 'Cập nhật tuyến xe'} width='50%' open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
       <div className='grid grid-cols-3 gap-4'>
         <div>
-          <span>Tên tuyến đường</span>
+          <span>Tên tuyến xe</span>
           <Input value={dataBusRoute.route_name} onChange={(e) => handleChangeInput('route_name', e.target.value)} />
         </div>
         <div>
@@ -206,12 +176,6 @@ function ModalBusRoute({ isModalOpen, setIsModalOpen, fetchListRoutesBus, listDr
               </>
             )
           })}
-        </div>
-      </div>
-      <div className='mt-4'>
-        <p className=' text-lg font-medium'>Danh sách học sinh</p>
-        <div className=''>
-          <Table columns={columns} dataSource={listStudent} />
         </div>
       </div>
     </Modal>
