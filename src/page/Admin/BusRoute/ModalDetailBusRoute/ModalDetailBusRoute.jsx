@@ -46,7 +46,6 @@ function ModalDetailBusRoute({ isModalOpen, setIsModalOpen, data }) {
       console.log(error)
     }
   }
-  console.log(data)
 
   const getListStudents = async () => {
     const res = await fetchListStudents(data)

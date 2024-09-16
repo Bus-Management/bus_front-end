@@ -69,7 +69,7 @@ function ModalBusRoute({ isModalOpen, setIsModalOpen, fetchListRoutesBus, listDr
     try {
       const res = action === 'CREATE' ? await userAPI.createBusRoute({ ...dataBusRoute, stops: listStops }) : await userAPI.updateBusRoute(dataBusRoute.id, dataBusRoute)
       if (res) {
-        toast.success('Thành công')
+        toast.success(res.message)
         fetchListRoutesBus()
         setDataBusRoute(dataBusRouteDefault)
       }
