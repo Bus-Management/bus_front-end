@@ -5,6 +5,7 @@ import { toast } from 'react-toastify'
 import userAPI from '~/api/userAPI'
 import ModalChildren from './ModalChildren/ModalChildren'
 import ModalDelete from '~/components/ModalDelete'
+import { NavLink } from 'react-router-dom'
 
 function Children() {
   const [listChildrens, setListChildrens] = useState([])
@@ -78,6 +79,11 @@ function Children() {
                           <span>{item.class}</span>
                         </p>
                       </div>
+                      <NavLink to={`/register-route/${item.id}`}>
+                        <Button type='primary' className='mt-4'>
+                          Chọn tuyến đường đăng ký
+                        </Button>
+                      </NavLink>
                     </div>
                   </>
                 )

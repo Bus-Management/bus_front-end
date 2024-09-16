@@ -61,6 +61,14 @@ const userAPI = {
   updateBusRoute: (routeId, data) => {
     const url = `/user/bus-route/${routeId}`
     return axiosClient.put(url, data)
+  },
+  assignRoute: (data) => {
+    const url = '/user/register-route'
+    return axiosClient.post(url, data)
+  },
+  unAssignRoute: (data) => {
+    const url = '/user/unregister-route'
+    return axiosClient.post(url, data)
   }
 }
 
