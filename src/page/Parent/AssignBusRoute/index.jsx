@@ -2,10 +2,10 @@ import { EyeOutlined } from '@ant-design/icons'
 import { Button, Modal, Table } from 'antd'
 import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
-import userAPI from '~/api/userAPI'
 import ModalDetail from './ModalDetail/ModalDetail'
 import ModalAssign from './ModalAssign/ModalAssign'
 import { useParams } from 'react-router-dom'
+import busAPI from '~/api/busAPI'
 
 function AssignBusRoute() {
   const { childrenId } = useParams()
@@ -74,7 +74,7 @@ function AssignBusRoute() {
 
   const handleOk = async () => {
     try {
-      const res = await userAPI.unAssignRoute(dataDetail)
+      const res = await busAPI.unAssignRoute(dataDetail)
       toast.success(res.message)
       setIsModalUnassignOpen(false)
       fetchListRoutesBus()
@@ -88,7 +88,7 @@ function AssignBusRoute() {
 
   const fetchListRoutesBus = async () => {
     try {
-      const res = await userAPI.getAllBusRoutes()
+      const res = await busAPI.getAllBusRoutes()
       setListRoutesBus(res)
     } catch (error) {
       toast.error(error.response.data.message)

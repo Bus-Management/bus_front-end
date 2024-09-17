@@ -1,5 +1,6 @@
 import { Modal } from 'antd'
 import { toast } from 'react-toastify'
+import busAPI from '~/api/busAPI'
 import userAPI from '~/api/userAPI'
 
 function ModalDelete({ isModalOpen, setIsModalOpen, data, fetchListRoutesBus, fetchAllUsers, fetchListChildrens }) {
@@ -7,7 +8,7 @@ function ModalDelete({ isModalOpen, setIsModalOpen, data, fetchListRoutesBus, fe
     setIsModalOpen(false)
     try {
       if (fetchListRoutesBus) {
-        await userAPI.deleteBusRoute(data.id)
+        await busAPI.deleteBusRoute(data.id)
         fetchListRoutesBus()
       } else if (fetchAllUsers) {
         await userAPI.deleteUser(data.id)

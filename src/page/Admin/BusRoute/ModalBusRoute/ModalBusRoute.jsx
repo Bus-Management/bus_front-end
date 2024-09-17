@@ -9,7 +9,7 @@ import customParseFormat from 'dayjs/plugin/customParseFormat'
 dayjs.extend(customParseFormat)
 const dateFormat = 'YYYY-MM-DD'
 
-import userAPI from '~/api/userAPI'
+import busAPI from '~/api/busAPI'
 
 function ModalBusRoute({ isModalOpen, setIsModalOpen, fetchListRoutesBus, listDrivers, action, data }) {
   const dataBusRouteDefault = {
@@ -43,7 +43,7 @@ function ModalBusRoute({ isModalOpen, setIsModalOpen, fetchListRoutesBus, listDr
     setIsModalOpen(false)
     const listStops = buildDataListStops()
     try {
-      const res = action === 'CREATE' ? await userAPI.createBusRoute({ ...dataBusRoute, stops: listStops }) : await userAPI.updateBusRoute(dataBusRoute.id, dataBusRoute)
+      const res = action === 'CREATE' ? await busAPI.createBusRoute({ ...dataBusRoute, stops: listStops }) : await busAPI.updateBusRoute(dataBusRoute.id, dataBusRoute)
       if (res) {
         toast.success(res.message)
         fetchListRoutesBus()
@@ -56,6 +56,7 @@ function ModalBusRoute({ isModalOpen, setIsModalOpen, fetchListRoutesBus, listDr
 
   const handleCancel = () => {
     setIsModalOpen(false)
+    setDataBusRoute(dataBusRouteDefault)
   }
 
   const handleAddStops = () => {
@@ -144,7 +145,7 @@ function ModalBusRoute({ isModalOpen, setIsModalOpen, fetchListRoutesBus, listDr
       <div className='mt-4'>
         <p className=' text-lg font-medium'>Thêm các điểm dừng</p>
         <div className='grid grid-cols-3'>
-          {Object.entries(dataBusRoute.stops || listStops).map(([key, value], index) => {
+          {Object.entries(dataBusRoute.stops?.length > 0 ? dataBusRoute.stops : listStops).map(([key, value], index) => {
             return (
               <>
                 <div className={`flex gap-4 w-full col-span-2 ${key}`}>

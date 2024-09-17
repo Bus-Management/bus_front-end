@@ -1,11 +1,11 @@
 import { Modal } from 'antd'
 import { toast } from 'react-toastify'
-import userAPI from '~/api/userAPI'
+import busAPI from '~/api/busAPI'
 
 function ModalAssign({ isModalOpen, setIsModalOpen, data, fetchListRoutesBus }) {
   const handleOk = async () => {
     try {
-      const res = await userAPI.assignRoute(data)
+      const res = await busAPI.assignRoute(data)
       toast.success(res.message)
       setIsModalOpen(false)
       fetchListRoutesBus()

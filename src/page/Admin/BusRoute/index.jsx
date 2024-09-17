@@ -7,6 +7,7 @@ import userAPI from '~/api/userAPI'
 import ModalBusRoute from './ModalBusRoute/ModalBusRoute'
 import ModalDetailBusRoute from './ModalDetailBusRoute/ModalDetailBusRoute'
 import ModalDelete from '~/components/ModalDelete'
+import busAPI from '~/api/busAPI'
 
 function Driver() {
   const columns = [
@@ -76,7 +77,7 @@ function Driver() {
 
   const fetchListRoutesBus = async () => {
     try {
-      const res = await userAPI.getAllBusRoutes()
+      const res = await busAPI.getAllBusRoutes()
       const drivers = await userAPI.getAllDrivers()
       setListRoutesBus(res)
       setListDrivers(drivers)
