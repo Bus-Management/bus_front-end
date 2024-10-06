@@ -33,7 +33,7 @@ function AssignBusRoute() {
         return (
           <div className='w-48 flex items-center '>
             <EyeOutlined className='text-green-500 text-2xl cursor-pointer mr-4' onClick={() => handleDetail(data)} />
-            {data.students.some((item) => item.student_id === childrenId) ? (
+            {JSON.parse(data.students).some((item) => item.student_id === childrenId) ? (
               <>
                 <Button type='primary' disabled onClick={() => handleAssignRoute(data)}>
                   Đăng ký

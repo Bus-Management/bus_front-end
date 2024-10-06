@@ -42,10 +42,7 @@ function ModalChildren({ isModalOpen, setIsModalOpen, action, dataUpdateUser, fe
   const handleOk = async () => {
     setIsModalOpen(false)
     try {
-      const res =
-        action === 'CREATE'
-          ? await userAPI.createChildren({ ...dataUser, parentId: currentUser.id })
-          : await userAPI.updateUser(dataUser.id, { ...dataUser, parentId: currentUser.id, role: 'Học sinh' })
+      const res = action === 'CREATE' ? await userAPI.createChildren({ ...dataUser, parentId: currentUser.id }) : await userAPI.updateChildren(dataUser.id, dataUser)
       toast.success(res.message)
       setDataUser(dataUserDefault)
       fetchListChildrens()
@@ -55,7 +52,7 @@ function ModalChildren({ isModalOpen, setIsModalOpen, action, dataUpdateUser, fe
   }
   const handleCancel = () => {
     setIsModalOpen(false)
-    setImageUrl('')
+    setImageUrl()
   }
 
   const uploadButton = (
@@ -86,7 +83,7 @@ function ModalChildren({ isModalOpen, setIsModalOpen, action, dataUpdateUser, fe
       setLoading(false)
       setImageUrl(url)
       const secure_url = await handleUploadImage(url)
-      setDataUser({ ...dataUser, avatar: secure_url })
+      setDataUser({ ...dataUpdateUser, avatar: secure_url })
     })
   }
 
@@ -100,6 +97,10 @@ function ModalChildren({ isModalOpen, setIsModalOpen, action, dataUpdateUser, fe
     setDataUser(dataUpdateUser)
     setImageUrl(dataUpdateUser.avatar || 'no-user.png')
   }, [dataUpdateUser])
+
+  useEffect(() => {
+    setDataUser({ ...dataUser, avatar: imageUrl })
+  }, [imageUrl])
 
   return (
     <>

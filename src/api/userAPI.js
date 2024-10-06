@@ -40,6 +40,10 @@ const userAPI = {
   createChildren: (data) => {
     const url = '/user/register-student'
     return axiosClient.post(url, data)
+  },
+  updateChildren: (userId, data) => {
+    const url = `/user/update-student/${userId}`
+    return axiosClient.put(url, data)
   }
 }
 

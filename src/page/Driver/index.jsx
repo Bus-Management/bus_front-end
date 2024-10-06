@@ -121,7 +121,14 @@ function Driver() {
   const fetchListRoutesBus = async () => {
     try {
       const res = await busAPI.getListRoutesBus(currentUser.id)
-      setListRoutesBus(res.assignedRoutes)
+      const newList = res.assignedRoutes.map((item) => {
+        return {
+          ...item,
+          stops: JSON.parse(item.stops),
+          students: JSON.parse(item.students)
+        }
+      })
+      setListRoutesBus(newList)
     } catch (error) {
       toast.error(error.response.data.message)
     }

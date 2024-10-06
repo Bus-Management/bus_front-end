@@ -41,7 +41,7 @@ function ModalParent({ isModalOpen, setIsModalOpen, data }) {
   const handleOk = async () => {
     setIsModalOpen(false)
     try {
-      const res = await userAPI.updateUser(dataUser.id, { ...dataUser })
+      const res = await userAPI.updateUser(dataUser.id, dataUser)
       toast.success(res.message)
       updateUser(dataUser)
       setDataUser(dataUserDefault)
@@ -95,6 +95,10 @@ function ModalParent({ isModalOpen, setIsModalOpen, data }) {
     setDataUser(data)
     setImageUrl(data.avatar || 'no-user.png')
   }, [data])
+
+  useEffect(() => {
+    setDataUser({ ...data, avatar: imageUrl })
+  }, [imageUrl])
 
   return (
     <>
