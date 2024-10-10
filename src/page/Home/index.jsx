@@ -3,6 +3,8 @@ import { useContext, useState } from 'react'
 import { Navigate, NavLink } from 'react-router-dom'
 import { AuthContext } from '~/context/AuthContext'
 import ModalParent from './ModalParent/ModalParent'
+import MapBox from '~/components/MapBox '
+import Map from '~/components/Map'
 
 function Home() {
   const { currentUser } = useContext(AuthContext)
@@ -51,6 +53,8 @@ function Home() {
             )}
             {currentUser.role === 'Admin' && (
               <>
+                {/* <Map /> */}
+                {/* <MapBox /> */}
                 <NavLink to='admin/bus-routes'>
                   <div className='bg-blue-500 p-4 rounded-lg text-white flex flex-col cursor-pointer shadow-xl'>
                     <span className='text-4xl mb-4'>

@@ -22,14 +22,6 @@ function Driver() {
       dataIndex: 'start_day'
     },
     {
-      title: 'Điểm bắt đầu',
-      dataIndex: 'start_point'
-    },
-    {
-      title: 'Điểm kết thúc',
-      dataIndex: 'end_point'
-    },
-    {
       title: 'Chức năng',
       render: (data) => {
         return (

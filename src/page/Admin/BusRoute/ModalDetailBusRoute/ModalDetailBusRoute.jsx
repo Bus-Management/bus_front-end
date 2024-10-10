@@ -3,6 +3,7 @@ import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 import { useEffect, useState } from 'react'
 import userAPI from '~/api/userAPI'
+import MapBox from '~/components/MapBox '
 import fetchListStudents from '~/utils/fetchListStudents'
 dayjs.extend(customParseFormat)
 const dateFormat = 'YYYY-MM-DD'
@@ -58,19 +59,11 @@ function ModalDetailBusRoute({ isModalOpen, setIsModalOpen, data }) {
   }, [data])
 
   return (
-    <Modal title='Chi tiết thông tin tuyến xe' width='50%' open={isModalOpen} onCancel={handleCancel}>
+    <Modal title='Chi tiết thông tin tuyến xe' width='60%' open={isModalOpen} onCancel={handleCancel}>
       <div className='grid grid-cols-3 gap-4'>
         <div>
           <span>Tên tuyến xe</span>
           <Input value={data.route_name} />
-        </div>
-        <div>
-          <span>Điểm bắt đầu</span>
-          <Input value={data.start_point} />
-        </div>
-        <div>
-          <span>Điểm kết thúc</span>
-          <Input value={data.end_point} />
         </div>
         <div>
           <span>Ngày bắt đầu</span>
@@ -110,6 +103,9 @@ function ModalDetailBusRoute({ isModalOpen, setIsModalOpen, data }) {
         <div className=''>
           <Table columns={columns} dataSource={listStudent} />
         </div>
+      </div>
+      <div className='mt-6 '>
+        <MapBox pointA={data.start_point} pointB={data.end_point} />
       </div>
     </Modal>
   )

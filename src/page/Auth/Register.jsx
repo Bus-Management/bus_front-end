@@ -64,10 +64,6 @@ function Register() {
                   label: 'Phụ huynh'
                 },
                 {
-                  value: 'Giáo viên',
-                  label: 'Giáo viên'
-                },
-                {
                   value: 'Tài xế',
                   label: 'Tài xế'
                 }
