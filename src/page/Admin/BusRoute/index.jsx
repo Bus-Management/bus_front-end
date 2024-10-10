@@ -8,6 +8,7 @@ import ModalBusRoute from './ModalBusRoute/ModalBusRoute'
 import ModalDetailBusRoute from './ModalDetailBusRoute/ModalDetailBusRoute'
 import ModalDelete from '~/components/ModalDelete'
 import busAPI from '~/api/busAPI'
+import ModalMapBoxDraggable from '~/components/ModalMapBoxDraggable'
 
 function Driver() {
   const columns = [
@@ -23,14 +24,14 @@ function Driver() {
       title: 'Ngày bắt đầu',
       dataIndex: 'start_day'
     },
-    {
-      title: 'Điểm bắt đầu',
-      dataIndex: 'start_point'
-    },
-    {
-      title: 'Điểm kết thúc',
-      dataIndex: 'end_point'
-    },
+    // {
+    //   title: 'Điểm bắt đầu',
+    //   dataIndex: 'start_point'
+    // },
+    // {
+    //   title: 'Điểm kết thúc',
+    //   dataIndex: 'end_point'
+    // },
     {
       title: 'Chức năng',
       render: (data) => {
@@ -110,6 +111,7 @@ function Driver() {
       />
       <ModalDelete isModalOpen={isModalDeleteOpen} setIsModalOpen={setIsModalDeleteOpen} data={dataDeleteModal} fetchListRoutesBus={fetchListRoutesBus} />
       <ModalDetailBusRoute isModalOpen={isModalDetailOpen} setIsModalOpen={setIsModalDetailOpen} data={dataDetailModal} listDrivers={listDrivers} />
+      <ModalMapBoxDraggable />
     </>
   )
 }

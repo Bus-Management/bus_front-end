@@ -1,4 +1,4 @@
-import { DatePicker, Input, Modal, Select, Table, TimePicker } from 'antd'
+import { Button, DatePicker, Input, Modal, Select, TimePicker } from 'antd'
 import { DeleteOutlined, PlusCircleOutlined } from '@ant-design/icons'
 import { useEffect, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
@@ -10,6 +10,7 @@ dayjs.extend(customParseFormat)
 const dateFormat = 'YYYY-MM-DD'
 
 import busAPI from '~/api/busAPI'
+import ModalMapBoxDraggable from '~/components/ModalMapBoxDraggable'
 
 function ModalBusRoute({ isModalOpen, setIsModalOpen, fetchListRoutesBus, listDrivers, action, data }) {
   const dataBusRouteDefault = {
@@ -23,6 +24,8 @@ function ModalBusRoute({ isModalOpen, setIsModalOpen, fetchListRoutesBus, listDr
     students: []
   }
   const [dataBusRoute, setDataBusRoute] = useState(dataBusRouteDefault)
+  const [isOpenMapBoxDraggable, setIsOpenMapBoxDraggable] = useState(false)
+  const [actionCordinate, setActionCordinate] = useState('')
 
   const dataStopsDefault = { address: '', pickup_time: '', dropOff_time: '' }
   const [listStops, setListStops] = useState({ stop0: dataStopsDefault })
@@ -102,84 +105,117 @@ function ModalBusRoute({ isModalOpen, setIsModalOpen, fetchListRoutesBus, listDr
   }, [data])
 
   return (
-    <Modal title={action === 'CREATE' ? 'Tuyến xe mới' : 'Cập nhật tuyến xe'} width='50%' open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-      <div className='grid grid-cols-3 gap-4'>
-        <div>
-          <span>Tên tuyến xe</span>
-          <Input value={dataBusRoute.route_name} onChange={(e) => handleChangeInput('route_name', e.target.value)} />
+    <>
+      <Modal title={action === 'CREATE' ? 'Tuyến xe mới' : 'Cập nhật tuyến xe'} width='50%' open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+        <div className='grid grid-cols-3 gap-4'>
+          <div>
+            <span>Tên tuyến xe</span>
+            <Input value={dataBusRoute.route_name} onChange={(e) => handleChangeInput('route_name', e.target.value)} />
+          </div>
+          {/* <div>
+            <span>Điểm bắt đầu</span>
+            <Input value={dataBusRoute.start_point} onChange={(e) => handleChangeInput('start_point', e.target.value)} />
+          </div> */}
+          {/* <div>
+            <span>Điểm kết thúc</span>
+            <Input value={dataBusRoute.end_point} onChange={(e) => handleChangeInput('end_point', e.target.value)} />
+          </div> */}
+          <div>
+            <span>Ngày bắt đầu</span>
+            <DatePicker
+              className='w-full'
+              value={dataBusRoute.start_day && dayjs(dataBusRoute.start_day, dateFormat)}
+              onChange={(date, dateString) => handleChangeInput('start_day', dateString)}
+            />
+          </div>
+          <div>
+            <span>Tài xế</span>
+            <Select
+              placeholder='Vui lòng chọn tài xế'
+              onChange={(value) => {
+                handleChangeInput('driver_id', value)
+              }}
+              value={dataBusRoute.driver_id || undefined}
+              options={listDrivers.map((item) => {
+                return {
+                  value: item.id,
+                  label: item.fullName
+                }
+              })}
+              className='w-full'
+            />
+          </div>
+          <div>
+            <Button
+              type='primary'
+              className='mb-4'
+              onClick={() => {
+                setActionCordinate('start_point')
+                setIsOpenMapBoxDraggable(true)
+              }}
+            >
+              Chọn điểm bắt đầu
+            </Button>
+          </div>
+          <div>
+            <Button
+              type='primary'
+              className='mb-4'
+              onClick={() => {
+                setActionCordinate('end_point')
+                setIsOpenMapBoxDraggable(true)
+              }}
+            >
+              Chọn điểm kết thúc
+            </Button>
+          </div>
         </div>
-        <div>
-          <span>Điểm bắt đầu</span>
-          <Input value={dataBusRoute.start_point} onChange={(e) => handleChangeInput('start_point', e.target.value)} />
-        </div>
-        <div>
-          <span>Điểm kết thúc</span>
-          <Input value={dataBusRoute.end_point} onChange={(e) => handleChangeInput('end_point', e.target.value)} />
-        </div>
-        <div>
-          <span>Ngày bắt đầu</span>
-          <DatePicker
-            className='w-full'
-            value={dataBusRoute.start_day && dayjs(dataBusRoute.start_day, dateFormat)}
-            onChange={(date, dateString) => handleChangeInput('start_day', dateString)}
-          />
-        </div>
-        <div>
-          <span>Tài xế</span>
-          <Select
-            placeholder='Vui lòng chọn tài xế'
-            onChange={(value) => {
-              handleChangeInput('driver_id', value)
-            }}
-            value={dataBusRoute.driver_id || undefined}
-            options={listDrivers.map((item) => {
-              return {
-                value: item.id,
-                label: item.fullName
-              }
+        <div className='mt-4'>
+          <p className=' text-lg font-medium'>Thêm các điểm dừng</p>
+          <div className='grid grid-cols-3'>
+            {Object.entries(dataBusRoute.stops?.length > 0 ? dataBusRoute.stops : listStops).map(([key, value], index) => {
+              return (
+                <>
+                  <div className={`flex gap-4 w-full col-span-2 ${key}`}>
+                    <div>
+                      <span>Địa chỉ</span>
+                      <Input value={value.address} onChange={(e) => handleChangeInputStops('address', key, e.target.value)} />
+                    </div>
+                    <div>
+                      <span>Thời gian đón</span>
+                      <TimePicker
+                        className='w-full'
+                        value={value.pickup_time && dayjs(value.pickup_time, 'HH:mm:ss')}
+                        onChange={(time, timeString) => handleChangeInputStops('pickup_time', key, timeString)}
+                      />
+                    </div>
+                    <div>
+                      <span>Thời gian trả</span>
+                      <TimePicker
+                        className='w-full'
+                        value={value.dropOff_time && dayjs(value.dropOff_time, 'HH:mm:ss')}
+                        onChange={(time, timeString) => handleChangeInputStops('dropOff_time', key, timeString)}
+                      />
+                    </div>
+                  </div>
+                  <div className='pt-6 ml-4'>
+                    <PlusCircleOutlined onClick={handleAddStops} className='text-2xl cursor-pointer text-green-700 mr-2' />
+                    {index > 0 && <DeleteOutlined onClick={() => handleDeleteStops(key)} className='text-2xl cursor-pointer text-red-500' />}
+                  </div>
+                </>
+              )
             })}
-            className='w-full'
-          />
+          </div>
         </div>
-      </div>
-      <div className='mt-4'>
-        <p className=' text-lg font-medium'>Thêm các điểm dừng</p>
-        <div className='grid grid-cols-3'>
-          {Object.entries(dataBusRoute.stops?.length > 0 ? dataBusRoute.stops : listStops).map(([key, value], index) => {
-            return (
-              <>
-                <div className={`flex gap-4 w-full col-span-2 ${key}`}>
-                  <div>
-                    <span>Địa chỉ</span>
-                    <Input value={value.address} onChange={(e) => handleChangeInputStops('address', key, e.target.value)} />
-                  </div>
-                  <div>
-                    <span>Thời gian đón</span>
-                    <TimePicker
-                      className='w-full'
-                      value={value.pickup_time && dayjs(value.pickup_time, 'HH:mm:ss')}
-                      onChange={(time, timeString) => handleChangeInputStops('pickup_time', key, timeString)}
-                    />
-                  </div>
-                  <div>
-                    <span>Thời gian trả</span>
-                    <TimePicker
-                      className='w-full'
-                      value={value.dropOff_time && dayjs(value.dropOff_time, 'HH:mm:ss')}
-                      onChange={(time, timeString) => handleChangeInputStops('dropOff_time', key, timeString)}
-                    />
-                  </div>
-                </div>
-                <div className='pt-6 ml-4'>
-                  <PlusCircleOutlined onClick={handleAddStops} className='text-2xl cursor-pointer text-green-700 mr-2' />
-                  {index > 0 && <DeleteOutlined onClick={() => handleDeleteStops(key)} className='text-2xl cursor-pointer text-red-500' />}
-                </div>
-              </>
-            )
-          })}
-        </div>
-      </div>
-    </Modal>
+      </Modal>
+      <ModalMapBoxDraggable
+        isOpenMapBoxDraggable={isOpenMapBoxDraggable}
+        setIsOpenMapBoxDraggable={setIsOpenMapBoxDraggable}
+        actionCordinate={actionCordinate}
+        dataBusRoute={dataBusRoute}
+        setDataBusRoute={setDataBusRoute}
+      />
+    </>
   )
 }
 
