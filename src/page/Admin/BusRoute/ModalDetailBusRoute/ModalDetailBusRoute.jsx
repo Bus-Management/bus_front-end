@@ -2,7 +2,8 @@ import { DatePicker, Input, Modal, Table, TimePicker } from 'antd'
 import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 import { useEffect, useState } from 'react'
-import userAPI from '~/api/userAPI'
+import { toast } from 'react-toastify'
+import busRouteAPI from '~/api/busRouteAPI'
 import MapBox from '~/components/MapBox '
 import fetchListStudents from '~/utils/fetchListStudents'
 dayjs.extend(customParseFormat)
@@ -32,19 +33,21 @@ function ModalDetailBusRoute({ isModalOpen, setIsModalOpen, data }) {
     }
   ]
 
-  const [dataDriver, setDataDriver] = useState({})
+  const [dataDetail, setDataDetail] = useState({})
   const [listStudent, setListStudent] = useState([])
 
   const handleCancel = () => {
     setIsModalOpen(false)
   }
 
-  const fetchDataDriver = async () => {
+  const fetchDataDetail = async () => {
     try {
-      const res = await userAPI.getDetailUser(data.driver_id)
-      setDataDriver(res)
+      if (data.id != undefined) {
+        const res = await busRouteAPI.getDetailBusRoute(data.id)
+        setDataDetail(res)
+      }
     } catch (error) {
-      console.log(error)
+      toast.error(error.response.data.message)
     }
   }
 
@@ -54,8 +57,8 @@ function ModalDetailBusRoute({ isModalOpen, setIsModalOpen, data }) {
   }
 
   useEffect(() => {
-    fetchDataDriver()
     getListStudents()
+    fetchDataDetail()
   }, [data])
 
   return (
@@ -63,15 +66,19 @@ function ModalDetailBusRoute({ isModalOpen, setIsModalOpen, data }) {
       <div className='grid grid-cols-3 gap-4'>
         <div>
           <span>Tên tuyến xe</span>
-          <Input value={data.route_name} />
+          <Input value={dataDetail.route_name} />
         </div>
         <div>
           <span>Ngày bắt đầu</span>
-          <DatePicker className='w-full' value={data.start_day && dayjs(data.start_day, dateFormat)} />
+          <DatePicker className='w-full' value={dataDetail.start_day && dayjs(dataDetail.start_day, dateFormat)} />
         </div>
         <div>
           <span>Tài xế</span>
-          <Input value={dataDriver.fullName} />
+          <Input value={dataDetail.driverName} />
+        </div>
+        <div>
+          <span>Xe bus</span>
+          <Input value={dataDetail.license_plate} />
         </div>
       </div>
       <div className='mt-4'>

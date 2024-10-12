@@ -7,7 +7,7 @@ const MapBox = ({ pointA, pointB }) => {
   const [viewport, setViewport] = useState({
     latitude: 0,
     longitude: 0,
-    zoom: 14
+    zoom: 12
   })
 
   const [searchQuery, setSearchQuery] = useState('')
@@ -93,12 +93,12 @@ const MapBox = ({ pointA, pointB }) => {
           )}
 
           {/* Marker for Point A */}
-          <Marker latitude={pointA.lat} longitude={pointA.lng}>
+          <Marker latitude={pointA?.lat} longitude={pointA?.lng}>
             <div className='bg-red-600 size-4 rounded-full'></div>
           </Marker>
 
           {/* Marker for Point B */}
-          <Marker latitude={pointB.lat} longitude={pointB.lng} offsetLeft={-20} offsetTop={-10}></Marker>
+          <Marker latitude={pointB?.lat} longitude={pointB?.lng} offsetLeft={-20} offsetTop={-10}></Marker>
 
           {/* Render the route as a line on the map */}
           {route && (

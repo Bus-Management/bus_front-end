@@ -5,7 +5,7 @@ import { toast } from 'react-toastify'
 import ModalDetail from './ModalDetail/ModalDetail'
 import ModalAssign from './ModalAssign/ModalAssign'
 import { useParams } from 'react-router-dom'
-import busAPI from '~/api/busAPI'
+import busRouteAPI from '~/api/busRouteAPI'
 
 function AssignBusRoute() {
   const { childrenId } = useParams()
@@ -74,7 +74,7 @@ function AssignBusRoute() {
 
   const handleOk = async () => {
     try {
-      const res = await busAPI.unAssignRoute(dataDetail)
+      const res = await busRouteAPI.unAssignRoute(dataDetail)
       toast.success(res.message)
       setIsModalUnassignOpen(false)
       fetchListRoutesBus()
@@ -88,7 +88,7 @@ function AssignBusRoute() {
 
   const fetchListRoutesBus = async () => {
     try {
-      const res = await busAPI.getAllBusRoutes()
+      const res = await busRouteAPI.getAllBusRoutes()
       setListRoutesBus(res)
     } catch (error) {
       toast.error(error.response.data.message)

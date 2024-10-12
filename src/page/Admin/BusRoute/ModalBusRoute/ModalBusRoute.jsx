@@ -9,14 +9,14 @@ import customParseFormat from 'dayjs/plugin/customParseFormat'
 dayjs.extend(customParseFormat)
 const dateFormat = 'YYYY-MM-DD'
 
-import busAPI from '~/api/busAPI'
 import ModalMapBoxDraggable from '~/components/ModalMapBoxDraggable'
+import busRouteAPI from '~/api/busRouteAPI'
+import MapBox from '~/components/MapBox '
 
-function ModalBusRoute({ isModalOpen, setIsModalOpen, fetchListRoutesBus, listDrivers, action, data }) {
+function ModalBusRoute({ isModalOpen, setIsModalOpen, fetchListRoutesBus, listDrivers, listBus, action, data }) {
   const dataBusRouteDefault = {
     route_name: '',
-    bus_capacity: '',
-    driver_id: '',
+    bus_id: '',
     start_point: '',
     end_point: '',
     start_day: '',
@@ -34,7 +34,6 @@ function ModalBusRoute({ isModalOpen, setIsModalOpen, fetchListRoutesBus, listDr
     let results = []
     Object.entries(listStops).map(([key, value], index) => {
       let obj = {
-        stop_id: uuidv4(),
         ...value
       }
       results.push(obj)
@@ -46,7 +45,7 @@ function ModalBusRoute({ isModalOpen, setIsModalOpen, fetchListRoutesBus, listDr
     setIsModalOpen(false)
     const listStops = buildDataListStops()
     try {
-      const res = action === 'CREATE' ? await busAPI.createBusRoute({ ...dataBusRoute, stops: listStops }) : await busAPI.updateBusRoute(dataBusRoute.id, dataBusRoute)
+      const res = action === 'CREATE' ? await busRouteAPI.createBusRoute({ ...dataBusRoute, stops: listStops }) : await busRouteAPI.updateBusRoute(dataBusRoute.id, dataBusRoute)
       if (res) {
         toast.success(res.message)
         fetchListRoutesBus()
@@ -112,14 +111,6 @@ function ModalBusRoute({ isModalOpen, setIsModalOpen, fetchListRoutesBus, listDr
             <span>Tên tuyến xe</span>
             <Input value={dataBusRoute.route_name} onChange={(e) => handleChangeInput('route_name', e.target.value)} />
           </div>
-          {/* <div>
-            <span>Điểm bắt đầu</span>
-            <Input value={dataBusRoute.start_point} onChange={(e) => handleChangeInput('start_point', e.target.value)} />
-          </div> */}
-          {/* <div>
-            <span>Điểm kết thúc</span>
-            <Input value={dataBusRoute.end_point} onChange={(e) => handleChangeInput('end_point', e.target.value)} />
-          </div> */}
           <div>
             <span>Ngày bắt đầu</span>
             <DatePicker
@@ -129,46 +120,52 @@ function ModalBusRoute({ isModalOpen, setIsModalOpen, fetchListRoutesBus, listDr
             />
           </div>
           <div>
-            <span>Tài xế</span>
+            <span>Chọn xe</span>
             <Select
-              placeholder='Vui lòng chọn tài xế'
+              placeholder='Vui lòng chọn xe'
               onChange={(value) => {
-                handleChangeInput('driver_id', value)
+                handleChangeInput('bus_id', value)
               }}
-              value={dataBusRoute.driver_id || undefined}
-              options={listDrivers.map((item) => {
+              value={dataBusRoute.bus_id || undefined}
+              options={listBus.map((item) => {
                 return {
                   value: item.id,
-                  label: item.fullName
+                  label: item.license_plate
                 }
               })}
               className='w-full'
             />
           </div>
-          <div>
-            <Button
-              type='primary'
-              className='mb-4'
-              onClick={() => {
-                setActionCordinate('start_point')
-                setIsOpenMapBoxDraggable(true)
-              }}
-            >
-              Chọn điểm bắt đầu
-            </Button>
-          </div>
-          <div>
-            <Button
-              type='primary'
-              className='mb-4'
-              onClick={() => {
-                setActionCordinate('end_point')
-                setIsOpenMapBoxDraggable(true)
-              }}
-            >
-              Chọn điểm kết thúc
-            </Button>
-          </div>
+          {action === 'CREATE' && (
+            <>
+              <div>
+                <br />
+                <Button
+                  type='primary'
+                  className='mb-4'
+                  onClick={() => {
+                    setActionCordinate('start_point')
+                    setIsOpenMapBoxDraggable(true)
+                  }}
+                >
+                  Chọn nơi xuất phát
+                </Button>
+              </div>
+              <div>
+                <br />
+                <Button
+                  type='primary'
+                  className='mb-4'
+                  onClick={() => {
+                    setActionCordinate('end_point')
+                    setIsOpenMapBoxDraggable(true)
+                  }}
+                >
+                  Chọn điểm đến
+                </Button>
+              </div>
+            </>
+          )}
         </div>
         <div className='mt-4'>
           <p className=' text-lg font-medium'>Thêm các điểm dừng</p>
@@ -206,6 +203,11 @@ function ModalBusRoute({ isModalOpen, setIsModalOpen, fetchListRoutesBus, listDr
               )
             })}
           </div>
+          {action === 'UPDATE' && (
+            <div className='mt-4'>
+              <MapBox pointA={dataBusRoute.start_point} pointB={dataBusRoute.end_point} />
+            </div>
+          )}
         </div>
       </Modal>
       <ModalMapBoxDraggable
