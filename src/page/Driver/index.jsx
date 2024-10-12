@@ -1,7 +1,7 @@
 import { Button, Modal, Table } from 'antd'
 import { useContext, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
-import busAPI from '~/api/busAPI'
+import busRouteAPI from '~/api/busRouteAPI'
 import userAPI from '~/api/userAPI'
 import { AuthContext } from '~/context/AuthContext'
 
@@ -112,7 +112,7 @@ function Driver() {
 
   const fetchListRoutesBus = async () => {
     try {
-      const res = await busAPI.getListRoutesBus(currentUser.id)
+      const res = await busRouteAPI.getListRoutesBus(currentUser.id)
       const newList = res.assignedRoutes.map((item) => {
         return {
           ...item,

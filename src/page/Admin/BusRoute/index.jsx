@@ -7,8 +7,9 @@ import userAPI from '~/api/userAPI'
 import ModalBusRoute from './ModalBusRoute/ModalBusRoute'
 import ModalDetailBusRoute from './ModalDetailBusRoute/ModalDetailBusRoute'
 import ModalDelete from '~/components/ModalDelete'
-import busAPI from '~/api/busAPI'
+import busRouteAPI from '~/api/busRouteAPI'
 import ModalMapBoxDraggable from '~/components/ModalMapBoxDraggable'
+import busAPI from '~/api/busAPI'
 
 function Driver() {
   const columns = [
@@ -24,14 +25,6 @@ function Driver() {
       title: 'Ngày bắt đầu',
       dataIndex: 'start_day'
     },
-    // {
-    //   title: 'Điểm bắt đầu',
-    //   dataIndex: 'start_point'
-    // },
-    // {
-    //   title: 'Điểm kết thúc',
-    //   dataIndex: 'end_point'
-    // },
     {
       title: 'Chức năng',
       render: (data) => {
@@ -47,6 +40,7 @@ function Driver() {
   ]
   const [listRoutesBus, setListRoutesBus] = useState([])
   const [listDrivers, setListDrivers] = useState([])
+  const [listBus, setListBus] = useState([])
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false)
   const [isModalDetailOpen, setIsModalDetailOpen] = useState(false)
@@ -78,10 +72,12 @@ function Driver() {
 
   const fetchListRoutesBus = async () => {
     try {
-      const res = await busAPI.getAllBusRoutes()
+      const res = await busRouteAPI.getAllBusRoutes()
       const drivers = await userAPI.getAllDrivers()
+      const bus = await busAPI.getAllBus()
       setListRoutesBus(res)
       setListDrivers(drivers)
+      setListBus(bus)
     } catch (error) {
       toast.error(error.response.data.message)
     }
@@ -105,6 +101,7 @@ function Driver() {
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
         listDrivers={listDrivers}
+        listBus={listBus}
         fetchListRoutesBus={fetchListRoutesBus}
         action={actionModal}
         data={dataUpdateModal}
