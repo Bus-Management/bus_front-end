@@ -25,8 +25,12 @@ const userAPI = {
     const url = `/user/update-user/${userId}`
     return axiosClient.put(url, data)
   },
+  updateStatusUser: (data) => {
+    const url = '/user/update-status-user'
+    return axiosClient.put(url, data)
+  },
   getDetailUser: (userId) => {
-    const url = `/user/student/${userId}`
+    const url = `/user/${userId}`
     return axiosClient.get(url)
   },
   getAllDrivers: () => {
