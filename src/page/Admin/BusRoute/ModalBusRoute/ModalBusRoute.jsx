@@ -13,7 +13,7 @@ import ModalMapBoxDraggable from '~/components/ModalMapBoxDraggable'
 import busRouteAPI from '~/api/busRouteAPI'
 import MapBox from '~/components/MapBox '
 
-function ModalBusRoute({ isModalOpen, setIsModalOpen, fetchListRoutesBus, listDrivers, listBus, action, data }) {
+function ModalBusRoute({ isModalOpen, setIsModalOpen, fetchListRoutesBus, listBus, action, data }) {
   const dataBusRouteDefault = {
     route_name: '',
     bus_id: '',
