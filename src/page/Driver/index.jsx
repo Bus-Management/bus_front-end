@@ -1,9 +1,11 @@
-import { Button, Modal, Table } from 'antd'
+import { Button, Modal, Table, Tag } from 'antd'
 import { useContext, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import busRouteAPI from '~/api/busRouteAPI'
 import userAPI from '~/api/userAPI'
+import MapBox from '~/components/MapBox '
 import { AuthContext } from '~/context/AuthContext'
+import updateStatusRoutesBus from '~/utils/updateStatusRoutesBus'
 
 function Driver() {
   const { currentUser } = useContext(AuthContext)
@@ -22,6 +24,34 @@ function Driver() {
       dataIndex: 'start_day'
     },
     {
+      title: 'Trạng thái',
+      dataIndex: 'status',
+      render: (data) => {
+        switch (data) {
+          case 'upcoming':
+            return (
+              <>
+                <Tag color='yellow'>Sắp khởi hành</Tag>
+              </>
+            )
+          case 'progressing':
+            return (
+              <>
+                <Tag color='blue'>Đang khởi hành</Tag>
+              </>
+            )
+          case 'completed':
+            return (
+              <>
+                <Tag color='green'>Đã hoàn thành</Tag>
+              </>
+            )
+          default:
+            break
+        }
+      }
+    },
+    {
       title: 'Chức năng',
       render: (data) => {
         return (
@@ -30,7 +60,7 @@ function Driver() {
               Xem danh sách học sinh
             </Button>
             <Button type='primary' onClick={() => handleShowListStops(data)} className='w-full'>
-              Xem danh sách điểm đón trả
+              Xem địa chỉ
             </Button>
           </div>
         )
@@ -75,6 +105,7 @@ function Driver() {
   const [listRoutesBus, setListRoutesBus] = useState([])
   const [listStudents, setListStudents] = useState([])
   const [listStops, setListStops] = useState([])
+  const [dataDetailModal, setDataDetailModal] = useState({})
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [actionTable, setActionTable] = useState('ListUsers')
 
@@ -83,8 +114,8 @@ function Driver() {
     setIsModalOpen(true)
     const newListStudent = []
     await Promise.all(
-      data.students.map(async (item) => {
-        const student = await userAPI.getDetailUser(item.student_id)
+      data.studentIds.map(async (item) => {
+        const student = await userAPI.getDetailUser(item)
         newListStudent.push(student)
       })
     )
@@ -92,6 +123,7 @@ function Driver() {
   }
 
   const handleShowListStops = async (data) => {
+    setDataDetailModal({ ...data, start_point: JSON.parse(data.start_point), end_point: JSON.parse(data.end_point) })
     setActionTable('ListStops')
     setIsModalOpen(true)
     const newListStops = []
@@ -117,10 +149,10 @@ function Driver() {
         return {
           ...item,
           stops: JSON.parse(item.stops),
-          students: JSON.parse(item.students)
+          studentIds: JSON.parse(item.studentIds)
         }
       })
-      setListRoutesBus(newList)
+      updateStatusRoutesBus(newList, setListRoutesBus)
     } catch (error) {
       toast.error(error.response.data.message)
     }
@@ -137,8 +169,9 @@ function Driver() {
           <Table columns={columns} dataSource={listRoutesBus} />
         </div>
       </div>
-      <Modal width={800} title={`Danh sách ${actionTable === 'ListUsers' ? 'học sinh' : 'điểm đón'}`} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+      <Modal width='50%' title={`Danh sách ${actionTable === 'ListUsers' ? 'học sinh' : 'điểm đón'}`} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
         <Table columns={actionTable === 'ListUsers' ? columnStudents : columnStops} dataSource={actionTable === 'ListUsers' ? listStudents : listStops} pagination={false} />
+        {actionTable === 'ListStops' && <MapBox pointA={dataDetailModal.start_point} pointB={dataDetailModal.end_point} />}
       </Modal>
     </>
   )
