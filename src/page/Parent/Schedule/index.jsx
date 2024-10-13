@@ -1,10 +1,78 @@
-import { Space, Table, Tag } from 'antd'
+import { Button, Modal, Table, Tag } from 'antd'
 import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import busRouteAPI from '~/api/busRouteAPI'
+import MapBox from '~/components/MapBox '
+import fetchListStudents from '~/utils/fetchListStudents'
 import updateStatusRoutesBus from '~/utils/updateStatusRoutesBus'
 
 function Schedule() {
+  const columnStudents = [
+    {
+      title: 'Hình ảnh',
+      dataIndex: 'avatar',
+      render: (data) => (
+        <>
+          <img src={data || '/no-user.png'} className='size-11 rounded-full' />
+        </>
+      )
+    },
+    {
+      title: 'Tên học sinh',
+      dataIndex: 'fullName'
+    },
+    {
+      title: 'Tuổi',
+      dataIndex: 'age'
+    },
+    {
+      title: 'Lớp',
+      dataIndex: 'class'
+    },
+    {
+      title: 'Trạng thái',
+      dataIndex: 'status',
+      render: (value) => {
+        switch (value) {
+          case 'boarded':
+            return (
+              <>
+                <Tag color='warning' className='text-sm'>
+                  Đã lên xe
+                </Tag>
+              </>
+            )
+          case 'arrived':
+            return (
+              <>
+                <Tag color='success' className='text-sm'>
+                  Đã đến nơi
+                </Tag>
+              </>
+            )
+          case 'returning':
+            return (
+              <>
+                <Tag color='processing' className='text-sm'>
+                  Đang trở về
+                </Tag>
+              </>
+            )
+          case 'absent':
+            return (
+              <>
+                <Tag color='error' className='text-sm'>
+                  Vắng mặt
+                </Tag>
+              </>
+            )
+          default:
+            break
+        }
+      }
+    }
+  ]
+
   const columns = [
     {
       title: 'Tên tuyến xe',
@@ -45,16 +113,27 @@ function Schedule() {
     {
       title: 'Action',
       key: 'action',
-      render: (_, record) => (
-        <Space size='middle'>
-          <a>Invite {record.name}</a>
-          <a>Delete</a>
-        </Space>
+      render: (data) => (
+        <>
+          <Button type='primary' onClick={() => handleView(data)}>
+            Theo dõi
+          </Button>
+        </>
       )
     }
   ]
 
   const [listRoutesBus, setListRoutesBus] = useState([])
+  const [listStudents, setListStudents] = useState([])
+  const [dataDetail, setDataDetail] = useState({})
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const handleView = async (data) => {
+    setIsModalOpen(true)
+    setDataDetail({ ...data, start_point: JSON.parse(data.start_point), end_point: JSON.parse(data.end_point) })
+    const newListStudent = await fetchListStudents({ ...data, studentIds: JSON.parse(data.studentIds) })
+    setListStudents(newListStudent)
+  }
 
   const fetchListRoutesBus = async () => {
     try {
@@ -74,6 +153,10 @@ function Schedule() {
       <div className='container py-4'>
         <Table columns={columns} dataSource={listRoutesBus} />
       </div>
+      <Modal width='50%' title='Theo dõi lịch trình' open={isModalOpen} onOk={() => setIsModalOpen(false)} onCancel={() => setIsModalOpen(false)}>
+        <Table columns={columnStudents} dataSource={listStudents} />
+        <MapBox pointA={dataDetail.start_point} pointB={dataDetail.end_point} />
+      </Modal>
     </>
   )
 }

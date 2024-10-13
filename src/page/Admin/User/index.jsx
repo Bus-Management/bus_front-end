@@ -8,6 +8,15 @@ import ModalDelete from '~/components/ModalDelete'
 function User() {
   const columnsParents = [
     {
+      title: 'Hình ảnh',
+      dataIndex: 'avatar',
+      render: (data) => (
+        <>
+          <img src={data || '/no-user.png'} className='size-11 rounded-full' />
+        </>
+      )
+    },
+    {
       title: 'ID Phụ huynh',
       dataIndex: 'id'
     },
@@ -40,6 +49,15 @@ function User() {
     }
   ]
   const columnsDrivers = [
+    {
+      title: 'Hình ảnh',
+      dataIndex: 'avatar',
+      render: (data) => (
+        <>
+          <img src={data || '/no-user.png'} className='size-11 rounded-full' />
+        </>
+      )
+    },
     {
       title: 'ID tài xế',
       dataIndex: 'id'

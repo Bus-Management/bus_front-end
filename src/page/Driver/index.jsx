@@ -1,14 +1,57 @@
-import { Button, Modal, Table, Tag } from 'antd'
+import { Button, Dropdown, Modal, Table, Tag } from 'antd'
 import { useContext, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import busRouteAPI from '~/api/busRouteAPI'
 import userAPI from '~/api/userAPI'
 import MapBox from '~/components/MapBox '
 import { AuthContext } from '~/context/AuthContext'
+import fetchListStudents from '~/utils/fetchListStudents'
 import updateStatusRoutesBus from '~/utils/updateStatusRoutesBus'
 
 function Driver() {
   const { currentUser } = useContext(AuthContext)
+  const items = [
+    {
+      key: '1',
+      label: (
+        <>
+          <span className='text-yellow-500' onClick={() => updateStatusStudent(idStudent, 'boarded')}>
+            Đã lên xe
+          </span>
+        </>
+      )
+    },
+    {
+      key: '2',
+      label: (
+        <>
+          <span className='text-green-500' onClick={() => updateStatusStudent(idStudent, 'arrived')}>
+            Đã đến nơi
+          </span>
+        </>
+      )
+    },
+    {
+      key: '3',
+      label: (
+        <>
+          <span className='text-blue-500' onClick={() => updateStatusStudent(idStudent, 'returning')}>
+            Đang trở về
+          </span>
+        </>
+      )
+    },
+    {
+      key: '4',
+      label: (
+        <>
+          <span className='text-red-500' onClick={() => updateStatusStudent(idStudent, 'absent')}>
+            Vắng mặt
+          </span>
+        </>
+      )
+    }
+  ]
 
   const columns = [
     {
@@ -56,12 +99,17 @@ function Driver() {
       render: (data) => {
         return (
           <div className='w-48'>
-            <Button type='primary' onClick={() => handleShowListUsers(data)} className='mb-2 !bg-yellow-500 w-full'>
+            <Button type='primary' onClick={() => handleShowListUsers(data)} className='!bg-yellow-500 w-full'>
               Xem danh sách học sinh
             </Button>
-            <Button type='primary' onClick={() => handleShowListStops(data)} className='w-full'>
+            <Button type='primary' onClick={() => handleShowListStops(data)} className='w-full my-2'>
               Xem địa chỉ
             </Button>
+            {data.status === 'progressing' && (
+              <Button type='primary' onClick={() => handleShowListUsers(data)} className='!bg-cyan-500 w-full'>
+                Hoàn thành
+              </Button>
+            )}
           </div>
         )
       }
@@ -70,8 +118,13 @@ function Driver() {
 
   const columnStudents = [
     {
-      title: 'ID Học sinh',
-      dataIndex: 'id'
+      title: 'Hình ảnh',
+      dataIndex: 'avatar',
+      render: (data) => (
+        <>
+          <img src={data || '/no-user.png'} className='size-11 rounded-full' />
+        </>
+      )
     },
     {
       title: 'Tên học sinh',
@@ -84,6 +137,77 @@ function Driver() {
     {
       title: 'Lớp',
       dataIndex: 'class'
+    },
+    {
+      title: 'Tên phụ huynh',
+      dataIndex: 'parentName'
+    },
+    {
+      title: 'Số điện thoại',
+      dataIndex: 'phone'
+    },
+    {
+      title: 'Trạng thái',
+      dataIndex: 'status',
+      render: (value) => {
+        switch (value) {
+          case 'boarded':
+            return (
+              <>
+                <Tag color='warning' className='text-sm'>
+                  Đã lên xe
+                </Tag>
+              </>
+            )
+          case 'arrived':
+            return (
+              <>
+                <Tag color='success' className='text-sm'>
+                  Đã đến nơi
+                </Tag>
+              </>
+            )
+          case 'returning':
+            return (
+              <>
+                <Tag color='processing' className='text-sm'>
+                  Đang trở về
+                </Tag>
+              </>
+            )
+          case 'absent':
+            return (
+              <>
+                <Tag color='error' className='text-sm'>
+                  Vắng mặt
+                </Tag>
+              </>
+            )
+          default:
+            break
+        }
+      }
+    },
+    {
+      title: 'Chức năng',
+      render: (data) => {
+        const route = listRoutesBus.find((item) => item.id === data?.routeId)
+        return (
+          <>
+            {route.status === 'progressing' && (
+              <Dropdown
+                menu={{
+                  items
+                }}
+                placement='bottomRight'
+                trigger={['click']}
+              >
+                <Button onClick={() => setIdStudent(data.id)}>Cập nhật trạng thái</Button>
+              </Dropdown>
+            )}
+          </>
+        )
+      }
     }
   ]
 
@@ -108,17 +232,31 @@ function Driver() {
   const [dataDetailModal, setDataDetailModal] = useState({})
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [actionTable, setActionTable] = useState('ListUsers')
+  const [idStudent, setIdStudent] = useState('')
+
+  const updateStatusStudent = async (studentId, status) => {
+    try {
+      await userAPI.updateStatusUser({ studentId, status })
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const handleShowListUsers = async (data) => {
     setActionTable('ListUsers')
     setIsModalOpen(true)
-    const newListStudent = []
-    await Promise.all(
-      data.studentIds.map(async (item) => {
-        const student = await userAPI.getDetailUser(item)
-        newListStudent.push(student)
+    const listStudent = await fetchListStudents(data)
+    const newListStudent = await Promise.all(
+      listStudent.map(async (item) => {
+        const parent = await userAPI.getDetailUser(item.parentId)
+        return {
+          ...item,
+          parentName: parent.fullName,
+          phone: parent.phone
+        }
       })
     )
+
     setListStudents(newListStudent)
   }
 
