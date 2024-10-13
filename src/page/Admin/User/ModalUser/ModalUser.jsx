@@ -77,11 +77,11 @@ function ModalUser({ isOpen, setIsModalUserOpen, data, action, fetchAllUsers }) 
             value={dataUser.role}
             options={[
               {
-                value: 'Tài xế',
+                value: 'driver',
                 label: 'Tài xế'
               },
               {
-                value: 'Phụ huynh',
+                value: 'parent',
                 label: 'Phụ huynh'
               }
             ]}

@@ -15,7 +15,7 @@ function ModalDelete({ isModalOpen, setIsModalOpen, data, fetchListRoutesBus, fe
         await userAPI.deleteUser(data.id)
         fetchAllUsers()
       } else if (fetchListChildrens) {
-        await userAPI.deleteUser(data.id)
+        await userAPI.deleteStudent(data.id)
         fetchListChildrens()
       } else if (fetchListBus) {
         await busAPI.deleteBus(data.id)

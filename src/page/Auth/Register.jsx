@@ -60,11 +60,11 @@ function Register() {
               onChange={(value) => handleChangeInput('role', value)}
               options={[
                 {
-                  value: 'Phụ huynh',
+                  value: 'parent',
                   label: 'Phụ huynh'
                 },
                 {
-                  value: 'Tài xế',
+                  value: 'driver',
                   label: 'Tài xế'
                 }
               ]}

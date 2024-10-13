@@ -17,6 +17,10 @@ const userAPI = {
     const url = `/user/delete-user/${userId}`
     return axiosClient.delete(url)
   },
+  deleteStudent: (userId) => {
+    const url = `/user/delete-student/${userId}`
+    return axiosClient.delete(url)
+  },
   updateUser: (userId, data) => {
     const url = `/user/update-user/${userId}`
     return axiosClient.put(url, data)

@@ -1,6 +1,7 @@
 import { Input, Modal, TimePicker } from 'antd'
 import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
+import MapBox from '~/components/MapBox '
 dayjs.extend(customParseFormat)
 
 function ModalDetail({ isModalOpen, setIsModalOpen, data }) {
@@ -9,8 +10,8 @@ function ModalDetail({ isModalOpen, setIsModalOpen, data }) {
   }
   return (
     <>
-      <Modal title='Chi tiết điểm đón trả' open={isModalOpen} onCancel={handleCancel}>
-        <div className='grid grid-cols-3 gap-4'>
+      <Modal title='Chi tiết điểm đón trả' open={isModalOpen} width='50%' onCancel={handleCancel}>
+        <div className='grid grid-cols-3 gap-4 mb-4'>
           {data.stops?.length > 0 &&
             data.stops.map((value) => {
               return (
@@ -30,6 +31,10 @@ function ModalDetail({ isModalOpen, setIsModalOpen, data }) {
                 </>
               )
             })}
+        </div>
+        <div>
+          <span className='font-medium text-lg'>Tuyến đường chạy</span>
+          <MapBox pointA={data.start_point} pointB={data.end_point} />
         </div>
       </Modal>
     </>

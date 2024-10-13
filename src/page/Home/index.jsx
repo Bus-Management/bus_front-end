@@ -27,7 +27,7 @@ function Home() {
           </div>
           {/* --------Các dịch vụ */}
           <div className='grid grid-cols-3 gap-4'>
-            {currentUser.role === 'Tài xế' && (
+            {currentUser.role === 'driver' && (
               <NavLink to='/bus-routes'>
                 <div className='bg-blue-500 p-4 rounded-lg text-white flex flex-col cursor-pointer shadow-xl'>
                   <span className='text-4xl  mb-4'>
@@ -37,7 +37,7 @@ function Home() {
                 </div>
               </NavLink>
             )}
-            {currentUser.role === 'Phụ huynh' && (
+            {currentUser.role === 'parent' && (
               <>
                 <NavLink to='/childrens'>
                   <div className='bg-emerald-500 p-4 rounded-lg text-white flex flex-col cursor-pointer shadow-xl'>
