@@ -1,11 +1,10 @@
-import { EyeOutlined } from '@ant-design/icons'
 import { Button, Modal, Table } from 'antd'
 import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
-import ModalDetail from './ModalDetail/ModalDetail'
 import ModalAssign from './ModalAssign/ModalAssign'
 import { useParams } from 'react-router-dom'
 import busRouteAPI from '~/api/busRouteAPI'
+import ModalDetailBusRoute from '~/page/Admin/BusRoute/ModalDetailBusRoute/ModalDetailBusRoute'
 
 function AssignBusRoute() {
   const { childrenId } = useParams()
@@ -27,7 +26,7 @@ function AssignBusRoute() {
             <Button type='primary' className='!bg-cyan-600 mr-2' onClick={() => handleDetail(data)}>
               Xem chi tiết
             </Button>
-            {JSON.parse(data.students).some((item) => item.student_id === childrenId) ? (
+            {JSON.parse(data.studentIds).some((item) => item === childrenId) ? (
               <>
                 <Button type='primary' disabled onClick={() => handleAssignRoute(data)}>
                   Đăng ký
@@ -100,11 +99,11 @@ function AssignBusRoute() {
           <Table columns={columns} dataSource={listRoutesBus} />
         </div>
       </div>
-      <ModalDetail isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} data={dataDetail} />
       <ModalAssign isModalOpen={isModalAssignOpen} data={dataDetail} setIsModalOpen={setIsModalAssignOpen} fetchListRoutesBus={fetchListRoutesBus} />
       <Modal title='Xác hủy đăng ký' open={isModalUnassignOpen} onOk={handleOk} onCancel={handleCancel}>
         <p>Bạn có chắc muốn xóa hủy đăng ký?</p>
       </Modal>
+      <ModalDetailBusRoute isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} data={dataDetail} />
     </>
   )
 }

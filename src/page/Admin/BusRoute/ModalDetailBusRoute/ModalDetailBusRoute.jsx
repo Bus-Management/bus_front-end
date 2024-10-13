@@ -1,10 +1,11 @@
 import { DatePicker, Input, Modal, Table, TimePicker } from 'antd'
 import dayjs from 'dayjs'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import busRouteAPI from '~/api/busRouteAPI'
 import MapBox from '~/components/MapBox '
+import { AuthContext } from '~/context/AuthContext'
 import fetchListStudents from '~/utils/fetchListStudents'
 dayjs.extend(customParseFormat)
 const dateFormat = 'YYYY-MM-DD'
@@ -32,6 +33,7 @@ function ModalDetailBusRoute({ isModalOpen, setIsModalOpen, data }) {
       dataIndex: 'address'
     }
   ]
+  const { currentUser } = useContext(AuthContext)
 
   const [dataDetail, setDataDetail] = useState({})
   const [listStudent, setListStudent] = useState([])
@@ -52,7 +54,7 @@ function ModalDetailBusRoute({ isModalOpen, setIsModalOpen, data }) {
   }
 
   const getListStudents = async () => {
-    const res = await fetchListStudents({ ...data, students: JSON.parse(data.students) })
+    const res = await fetchListStudents({ ...data, studentIds: JSON.parse(data.studentIds) })
     setListStudent(res)
   }
 
@@ -105,12 +107,14 @@ function ModalDetailBusRoute({ isModalOpen, setIsModalOpen, data }) {
             })}
         </div>
       </div>
-      <div className='mt-4'>
-        <p className=' text-lg font-medium'>Danh sách học sinh</p>
-        <div className=''>
-          <Table columns={columns} dataSource={listStudent} />
+      {currentUser.role === 'Admin' && (
+        <div className='mt-4'>
+          <p className=' text-lg font-medium'>Danh sách học sinh</p>
+          <div className=''>
+            <Table columns={columns} dataSource={listStudent} />
+          </div>
         </div>
-      </div>
+      )}
       <div className='mt-6 '>
         <MapBox pointA={data.start_point} pointB={data.end_point} />
       </div>

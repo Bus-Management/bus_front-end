@@ -21,7 +21,7 @@ function ModalBusRoute({ isModalOpen, setIsModalOpen, fetchListRoutesBus, listDr
     end_point: '',
     start_day: '',
     stops: [],
-    students: []
+    studentIds: []
   }
   const [dataBusRoute, setDataBusRoute] = useState(dataBusRouteDefault)
   const [isOpenMapBoxDraggable, setIsOpenMapBoxDraggable] = useState(false)
