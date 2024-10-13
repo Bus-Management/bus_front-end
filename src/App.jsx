@@ -9,6 +9,7 @@ import User from '~/page/Admin/User'
 import Children from './page/Parent/Children'
 import AssignBusRoute from './page/Parent/AssignBusRoute'
 import Bus from './page/Admin/Bus'
+import Schedule from './page/Parent/Schedule'
 
 function App() {
   const router = createBrowserRouter([
@@ -21,6 +22,7 @@ function App() {
         { path: 'register', element: <Register /> },
         { path: 'bus-routes', element: <Driver /> },
         { path: 'childrens', element: <Children /> },
+        { path: 'schedule', element: <Schedule /> },
         { path: 'register-route/:childrenId', element: <AssignBusRoute /> },
         { path: 'admin/bus-routes', element: <BusRoute /> },
         { path: 'admin/users', element: <User /> },

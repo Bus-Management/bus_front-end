@@ -1,4 +1,4 @@
-import { EditOutlined, TruckOutlined, UserOutlined, ApartmentOutlined } from '@ant-design/icons'
+import { EditOutlined, TruckOutlined, UserOutlined, ApartmentOutlined, ScheduleOutlined } from '@ant-design/icons'
 import { useContext, useState } from 'react'
 import { Navigate, NavLink } from 'react-router-dom'
 import { AuthContext } from '~/context/AuthContext'
@@ -40,11 +40,19 @@ function Home() {
             {currentUser.role === 'parent' && (
               <>
                 <NavLink to='/childrens'>
-                  <div className='bg-emerald-500 p-4 rounded-lg text-white flex flex-col cursor-pointer shadow-xl'>
+                  <div className='bg-blue-500 p-4 rounded-lg text-white flex flex-col cursor-pointer shadow-xl'>
                     <span className='text-4xl  mb-4'>
                       <UserOutlined />
                     </span>
                     <span className='text-xl'>Quản lý thông tin của con</span>
+                  </div>
+                </NavLink>
+                <NavLink to='/schedule'>
+                  <div className='bg-rose-500 p-4 rounded-lg text-white flex flex-col cursor-pointer shadow-xl'>
+                    <span className='text-4xl  mb-4'>
+                      <ScheduleOutlined />
+                    </span>
+                    <span className='text-xl'>Xem lịch trình</span>
                   </div>
                 </NavLink>
               </>

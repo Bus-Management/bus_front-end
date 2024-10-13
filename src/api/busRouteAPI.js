@@ -9,12 +9,20 @@ const busRouteAPI = {
     const url = '/bus-route/bus-route'
     return axiosClient.get(url)
   },
+  getRoutesAssignedStudent: () => {
+    const url = '/bus-route/assigned-student'
+    return axiosClient.get(url)
+  },
   getDetailBusRoute: (routeId) => {
     const url = `/bus-route/detail/${routeId}`
     return axiosClient.get(url)
   },
   updateBusRoute: (routeId, data) => {
     const url = `/bus-route/${routeId}`
+    return axiosClient.put(url, data)
+  },
+  updateStatusBusRoute: (data) => {
+    const url = '/bus-route/update-route-status'
     return axiosClient.put(url, data)
   },
   assignRoute: (data) => {
