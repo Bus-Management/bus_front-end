@@ -20,19 +20,13 @@ function AssignBusRoute() {
       dataIndex: 'start_day'
     },
     {
-      title: 'Điểm bắt đầu',
-      dataIndex: 'start_point'
-    },
-    {
-      title: 'Điểm kết thúc',
-      dataIndex: 'end_point'
-    },
-    {
       title: 'Chức năng',
       render: (data) => {
         return (
           <div className='w-48 flex items-center '>
-            <EyeOutlined className='text-green-500 text-2xl cursor-pointer mr-4' onClick={() => handleDetail(data)} />
+            <Button type='primary' className='!bg-cyan-600 mr-2' onClick={() => handleDetail(data)}>
+              Xem chi tiết
+            </Button>
             {JSON.parse(data.students).some((item) => item.student_id === childrenId) ? (
               <>
                 <Button type='primary' disabled onClick={() => handleAssignRoute(data)}>
