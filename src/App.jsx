@@ -11,6 +11,7 @@ import AssignBusRoute from './page/Parent/AssignBusRoute'
 import Bus from './page/Admin/Bus'
 import Schedule from './page/Parent/Schedule'
 import HistoryRoute from './page/Driver/HistoryRoute/HistoryRoute'
+import HistorySchedule from './page/Parent/Schedule/HistorySchedule/HistorySchedule'
 
 function App() {
   const router = createBrowserRouter([
@@ -23,6 +24,7 @@ function App() {
         { path: 'register', element: <Register /> },
         { path: 'bus-routes', element: <Driver /> },
         { path: 'history/bus-routes', element: <HistoryRoute /> },
+        { path: 'history/schedule', element: <HistorySchedule /> },
         { path: 'childrens', element: <Children /> },
         { path: 'schedule', element: <Schedule /> },
         { path: 'register-route/:childrenId', element: <AssignBusRoute /> },

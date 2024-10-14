@@ -65,6 +65,14 @@ function Home() {
                     <span className='text-xl'>Xem lịch trình</span>
                   </div>
                 </NavLink>
+                <NavLink to='/history/schedule'>
+                  <div className='bg-emerald-500 p-4 rounded-lg text-white flex flex-col cursor-pointer shadow-xl'>
+                    <span className='text-4xl  mb-4'>
+                      <RollbackOutlined />
+                    </span>
+                    <span className='text-xl'>Xem lịch sử đăng ký lịch trình</span>
+                  </div>
+                </NavLink>
               </>
             )}
             {currentUser.role === 'Admin' && (

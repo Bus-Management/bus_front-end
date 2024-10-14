@@ -2,8 +2,8 @@ import { Button, Modal, Table, Tag } from 'antd'
 import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import busRouteAPI from '~/api/busRouteAPI'
+import userAPI from '~/api/userAPI'
 import MapBox from '~/components/MapBox '
-import fetchListStudents from '~/utils/fetchListStudents'
 import updateStatusRoutesBus from '~/utils/updateStatusRoutesBus'
 
 function Schedule() {
@@ -131,14 +131,14 @@ function Schedule() {
   const handleView = async (data) => {
     setIsModalOpen(true)
     setDataDetail({ ...data, start_point: JSON.parse(data.start_point), end_point: JSON.parse(data.end_point) })
-    const newListStudent = await fetchListStudents({ ...data, studentIds: JSON.parse(data.studentIds) })
-    setListStudents(newListStudent)
   }
 
   const fetchListRoutesBus = async () => {
     try {
       const res = await busRouteAPI.getRoutesAssignedStudent()
+      const childrens = await userAPI.getAllChildrens()
       updateStatusRoutesBus(res, setListRoutesBus)
+      setListStudents(childrens)
     } catch (error) {
       toast.error(error.response.data.message)
     }

@@ -9,12 +9,16 @@ const busRouteAPI = {
     const url = '/bus-route'
     return axiosClient.get(url)
   },
-  getAllRoutesCompleted: () => {
-    const url = '/bus-route/route-completed'
+  getAllRoutesNoCompleted: () => {
+    const url = '/bus-route/route-no-completed'
     return axiosClient.get(url)
   },
   getRoutesAssignedStudent: () => {
     const url = '/bus-route/assigned-student'
+    return axiosClient.get(url)
+  },
+  getRoutesAssignedStudentCompleted: () => {
+    const url = '/bus-route/assigned-student-completed'
     return axiosClient.get(url)
   },
   getDetailBusRoute: (routeId) => {
