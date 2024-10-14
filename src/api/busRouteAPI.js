@@ -6,7 +6,11 @@ const busRouteAPI = {
     return axiosClient.post(url, data)
   },
   getAllBusRoutes: () => {
-    const url = '/bus-route/bus-route'
+    const url = '/bus-route'
+    return axiosClient.get(url)
+  },
+  getAllRoutesCompleted: () => {
+    const url = '/bus-route/route-completed'
     return axiosClient.get(url)
   },
   getRoutesAssignedStudent: () => {
@@ -40,6 +44,14 @@ const busRouteAPI = {
   getListRoutesBus: (driverId) => {
     const url = `/bus-route/driver/${driverId}/assigned-route`
     return axiosClient.get(url)
+  },
+  getRoutesDriverCompleted: (driverId) => {
+    const url = `/bus-route/driver-completed/${driverId}`
+    return axiosClient.get(url)
+  },
+  updateCompletedRoute: (data) => {
+    const url = '/bus-route/complete'
+    return axiosClient.put(url, data)
   }
 }
 

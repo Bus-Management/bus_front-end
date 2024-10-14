@@ -10,6 +10,7 @@ import Children from './page/Parent/Children'
 import AssignBusRoute from './page/Parent/AssignBusRoute'
 import Bus from './page/Admin/Bus'
 import Schedule from './page/Parent/Schedule'
+import HistoryRoute from './page/Driver/HistoryRoute/HistoryRoute'
 
 function App() {
   const router = createBrowserRouter([
@@ -21,6 +22,7 @@ function App() {
         { path: 'login', element: <Login /> },
         { path: 'register', element: <Register /> },
         { path: 'bus-routes', element: <Driver /> },
+        { path: 'history/bus-routes', element: <HistoryRoute /> },
         { path: 'childrens', element: <Children /> },
         { path: 'schedule', element: <Schedule /> },
         { path: 'register-route/:childrenId', element: <AssignBusRoute /> },

@@ -4,6 +4,7 @@ import customParseFormat from 'dayjs/plugin/customParseFormat'
 import { useContext, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import busRouteAPI from '~/api/busRouteAPI'
+import userAPI from '~/api/userAPI'
 import MapBox from '~/components/MapBox '
 import { AuthContext } from '~/context/AuthContext'
 import fetchListStudents from '~/utils/fetchListStudents'
@@ -13,8 +14,9 @@ const dateFormat = 'YYYY-MM-DD'
 function ModalDetailBusRoute({ isModalOpen, setIsModalOpen, data }) {
   const columns = [
     {
-      title: 'ID Học sinh',
-      dataIndex: 'id'
+      title: 'Hình ảnh',
+      dataIndex: 'avatar',
+      render: (data) => <img src={data || '/no-user.png'} className='size-11 rounded-full' />
     },
     {
       title: 'Tên Học sinh',
@@ -31,6 +33,14 @@ function ModalDetailBusRoute({ isModalOpen, setIsModalOpen, data }) {
     {
       title: 'Địa chỉ',
       dataIndex: 'address'
+    },
+    {
+      title: 'Tên phụ huynh',
+      dataIndex: 'parentName'
+    },
+    {
+      title: 'Số điện thoại',
+      dataIndex: 'phone'
     }
   ]
   const { currentUser } = useContext(AuthContext)
@@ -54,9 +64,24 @@ function ModalDetailBusRoute({ isModalOpen, setIsModalOpen, data }) {
   }
 
   const getListStudents = async () => {
+    console.log('start')
+
     const res = await fetchListStudents({ ...data, studentIds: JSON.parse(data.studentIds) })
-    setListStudent(res)
+    const newListStudent = await Promise.all(
+      res.map(async (item) => {
+        const parent = await userAPI.getDetailUser(item.parentId)
+        return {
+          ...item,
+          parentName: parent.fullName,
+          phone: parent.phone
+        }
+      })
+    )
+    console.log(newListStudent)
+
+    setListStudent(newListStudent)
   }
+  console.log(listStudent)
 
   useEffect(() => {
     getListStudents()
@@ -65,7 +90,7 @@ function ModalDetailBusRoute({ isModalOpen, setIsModalOpen, data }) {
 
   return (
     <Modal title='Chi tiết thông tin tuyến xe' width='60%' open={isModalOpen} onCancel={handleCancel}>
-      <div className='grid grid-cols-3 gap-4'>
+      <div className='grid grid-cols-4 gap-4'>
         <div>
           <span>Tên tuyến xe</span>
           <Input value={dataDetail.route_name} />
@@ -108,6 +133,14 @@ function ModalDetailBusRoute({ isModalOpen, setIsModalOpen, data }) {
         </div>
       </div>
       {currentUser.role === 'Admin' && (
+        <div className='mt-4'>
+          <p className=' text-lg font-medium'>Danh sách học sinh</p>
+          <div className=''>
+            <Table columns={columns} dataSource={listStudent} />
+          </div>
+        </div>
+      )}
+      {currentUser.role === 'driver' && (
         <div className='mt-4'>
           <p className=' text-lg font-medium'>Danh sách học sinh</p>
           <div className=''>
