@@ -3,9 +3,9 @@ import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import _ from 'lodash'
 
-import userAPI from '~/api/userAPI'
 import busAPI from '~/api/busAPI'
 import { data } from 'autoprefixer'
+import userAPI from '~/api/userAPI'
 
 function ModalBus({ isOpen, setIsOpen }) {
   const dataBusDefault = {
@@ -15,12 +15,12 @@ function ModalBus({ isOpen, setIsOpen }) {
     driverId: ''
   }
   const [dataBus, setDataBus] = useState(dataBusDefault)
-  const [listDrivers, setListDrivers] = useState([])
+  const [listDriver, serListDriver] = useState([])
 
   const fetchListRoutesBus = async () => {
     try {
       const drivers = await userAPI.getAllDrivers()
-      setListDrivers(drivers)
+      serListDriver(drivers)
     } catch (error) {
       toast.error(error.response.data.message)
     }
@@ -38,6 +38,7 @@ function ModalBus({ isOpen, setIsOpen }) {
       const res = await busAPI.createBus(dataBus)
       toast.success(res.message)
       setDataBus(dataBusDefault)
+      fetchListRoutesBus()
     } catch (error) {
       console.log(error)
     }
@@ -76,7 +77,7 @@ function ModalBus({ isOpen, setIsOpen }) {
                 handleChangeInput('driverId', value)
               }}
               value={dataBus.driverId || undefined}
-              options={listDrivers.map((item) => {
+              options={listDriver?.map((item) => {
                 return {
                   value: item.id,
                   label: item.fullName
