@@ -10,11 +10,13 @@ const updateStatusRoutesBus = async (res, setListRoutesBus) => {
       let status = route.status
       if (startDate > currentDate) {
         status = 'upcoming'
-      } else if (startDate === currentDate) {
+      } else if (startDate === currentDate && !route.end_day) {
         status = 'progressing'
       }
 
-      busRouteAPI.updateStatusBusRoute({ routeId: route.id, status })
+      if (status !== route.status) {
+        busRouteAPI.updateStatusBusRoute({ routeId: route.id, status })
+      }
       if (status && route.end_day) {
         busRouteAPI.updateStatusBusRoute({ routeId: route.id, status: 'completed' })
       }

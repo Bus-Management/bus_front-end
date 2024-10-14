@@ -1,5 +1,5 @@
 import { DeleteOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons'
-import { Button, Table } from 'antd'
+import { Button, Table, Tag } from 'antd'
 import { useEffect, useState } from 'react'
 
 import { toast } from 'react-toastify'
@@ -10,6 +10,7 @@ import ModalDelete from '~/components/ModalDelete'
 import busRouteAPI from '~/api/busRouteAPI'
 import ModalMapBoxDraggable from '~/components/ModalMapBoxDraggable'
 import busAPI from '~/api/busAPI'
+import updateStatusRoutesBus from '~/utils/updateStatusRoutesBus'
 
 function Driver() {
   const columns = [
@@ -24,6 +25,38 @@ function Driver() {
     {
       title: 'Ngày bắt đầu',
       dataIndex: 'start_day'
+    },
+    {
+      title: 'Ngày hoàn thành',
+      dataIndex: 'end_day'
+    },
+    {
+      title: 'Trạng thái',
+      dataIndex: 'status',
+      render: (data) => {
+        switch (data) {
+          case 'upcoming':
+            return (
+              <>
+                <Tag color='yellow'>Sắp khởi hành</Tag>
+              </>
+            )
+          case 'progressing':
+            return (
+              <>
+                <Tag color='blue'>Đang khởi hành</Tag>
+              </>
+            )
+          case 'completed':
+            return (
+              <>
+                <Tag color='green'>Đã hoàn thành</Tag>
+              </>
+            )
+          default:
+            break
+        }
+      }
     },
     {
       title: 'Chức năng',
@@ -75,9 +108,16 @@ function Driver() {
       const res = await busRouteAPI.getAllBusRoutes()
       const drivers = await userAPI.getAllDrivers()
       const bus = await busAPI.getAllBus()
-      setListRoutesBus(res)
       setListDrivers(drivers)
       setListBus(bus)
+      const newList = res.map((item) => {
+        return {
+          ...item,
+          studentIds: JSON.parse(item.studentIds)
+        }
+      })
+
+      updateStatusRoutesBus(newList, setListRoutesBus)
     } catch (error) {
       toast.error(error.response.data.message)
     }

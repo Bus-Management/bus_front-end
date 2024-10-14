@@ -11,6 +11,11 @@ function AssignBusRoute() {
 
   const columns = [
     {
+      title: 'Tài xế',
+      dataIndex: 'avatar',
+      render: (data) => <img src={data || '/no-user.png'} className='size-11 rounded-full' />
+    },
+    {
       title: 'Tên tuyến xe',
       dataIndex: 'route_name'
     },
@@ -87,7 +92,7 @@ function AssignBusRoute() {
 
   const fetchListRoutesBus = async () => {
     try {
-      const res = await busRouteAPI.getAllRoutesCompleted()
+      const res = await busRouteAPI.getAllRoutesNoCompleted()
       setListRoutesBus(res)
     } catch (error) {
       toast.error(error.response.data.message)
