@@ -3,22 +3,20 @@ import busRouteAPI from '~/api/busRouteAPI'
 
 const updateStatusRoutesBus = async (res, setListRoutesBus) => {
   try {
-    const currentDate = new Date()
+    const currentDate = new Date().toLocaleString().split(',')[0]
 
     const updatedRoutes = res.map((route) => {
-      const startDate = new Date(route.start_day)
+      const startDate = new Date(route.start_day).toLocaleString().split(',')[0]
       let status = route.status
-
       if (startDate > currentDate) {
         status = 'upcoming'
-      } else if (startDate.toDateString() === currentDate.toDateString()) {
+      } else if (startDate === currentDate) {
         status = 'progressing'
-      } else if (startDate < currentDate) {
-        status = 'completed'
       }
 
-      if (status !== route.status) {
-        busRouteAPI.updateStatusBusRoute({ routeId: route.id, status })
+      busRouteAPI.updateStatusBusRoute({ routeId: route.id, status })
+      if (status && route.end_day) {
+        busRouteAPI.updateStatusBusRoute({ routeId: route.id, status: 'completed' })
       }
 
       return { ...route, status }

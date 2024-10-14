@@ -1,4 +1,4 @@
-import { EditOutlined, TruckOutlined, UserOutlined, ApartmentOutlined, ScheduleOutlined } from '@ant-design/icons'
+import { EditOutlined, TruckOutlined, UserOutlined, ApartmentOutlined, ScheduleOutlined, RollbackOutlined } from '@ant-design/icons'
 import { useContext, useState } from 'react'
 import { Navigate, NavLink } from 'react-router-dom'
 import { AuthContext } from '~/context/AuthContext'
@@ -28,14 +28,24 @@ function Home() {
           {/* --------Các dịch vụ */}
           <div className='grid grid-cols-3 gap-4'>
             {currentUser.role === 'driver' && (
-              <NavLink to='/bus-routes'>
-                <div className='bg-blue-500 p-4 rounded-lg text-white flex flex-col cursor-pointer shadow-xl'>
-                  <span className='text-4xl  mb-4'>
-                    <TruckOutlined />
-                  </span>
-                  <span className='text-xl'>Tuyến xe được phân công</span>
-                </div>
-              </NavLink>
+              <>
+                <NavLink to='/bus-routes'>
+                  <div className='bg-blue-500 p-4 rounded-lg text-white flex flex-col cursor-pointer shadow-xl'>
+                    <span className='text-4xl  mb-4'>
+                      <TruckOutlined />
+                    </span>
+                    <span className='text-xl'>Tuyến đường phân công</span>
+                  </div>
+                </NavLink>
+                <NavLink to='history/bus-routes'>
+                  <div className='bg-rose-500 p-4 rounded-lg text-white flex flex-col cursor-pointer shadow-xl'>
+                    <span className='text-4xl  mb-4'>
+                      <RollbackOutlined />
+                    </span>
+                    <span className='text-xl'>Xem lịch sử tuyến đường</span>
+                  </div>
+                </NavLink>
+              </>
             )}
             {currentUser.role === 'parent' && (
               <>

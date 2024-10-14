@@ -106,7 +106,7 @@ function Driver() {
               Xem địa chỉ
             </Button>
             {data.status === 'progressing' && (
-              <Button type='primary' onClick={() => handleShowListUsers(data)} className='!bg-cyan-500 w-full'>
+              <Button type='primary' onClick={() => handleCompleteRoute(data)} className='!bg-cyan-500 w-full'>
                 Hoàn thành
               </Button>
             )}
@@ -273,6 +273,16 @@ function Driver() {
     setListStops(newListStops)
   }
 
+  const handleCompleteRoute = async (data) => {
+    try {
+      const res = await busRouteAPI.updateCompletedRoute({ routeId: data.id })
+      toast.success(res.message)
+      fetchListRoutesBus
+    } catch (error) {
+      toast.error(error.response.data.message)
+    }
+  }
+
   const handleOk = () => {
     setIsModalOpen(false)
   }
@@ -283,7 +293,7 @@ function Driver() {
   const fetchListRoutesBus = async () => {
     try {
       const res = await busRouteAPI.getListRoutesBus(currentUser.id)
-      const newList = res.assignedRoutes.map((item) => {
+      const newList = res.map((item) => {
         return {
           ...item,
           stops: JSON.parse(item.stops),

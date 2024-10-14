@@ -31,9 +31,15 @@ function AssignBusRoute() {
                 <Button type='primary' disabled onClick={() => handleAssignRoute(data)}>
                   Đăng ký
                 </Button>
-                <Button type='primary' className='!bg-red-600 ml-2' onClick={() => handleUnassignRoute(data)}>
-                  Hủy đăng ký
-                </Button>
+                {data.status === 'progressing' ? (
+                  <Button type='primary' disabled className='!bg-red-600 ml-2' onClick={() => handleUnassignRoute(data)}>
+                    Hủy đăng ký
+                  </Button>
+                ) : (
+                  <Button type='primary' className='!bg-red-600 ml-2' onClick={() => handleUnassignRoute(data)}>
+                    Hủy đăng ký
+                  </Button>
+                )}
               </>
             ) : (
               <Button type='primary' onClick={() => handleAssignRoute(data)}>
@@ -81,7 +87,7 @@ function AssignBusRoute() {
 
   const fetchListRoutesBus = async () => {
     try {
-      const res = await busRouteAPI.getAllBusRoutes()
+      const res = await busRouteAPI.getAllRoutesCompleted()
       setListRoutesBus(res)
     } catch (error) {
       toast.error(error.response.data.message)
