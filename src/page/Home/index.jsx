@@ -84,7 +84,7 @@ function Home() {
                     <span className='text-4xl mb-4'>
                       <ApartmentOutlined />
                     </span>
-                    <span className='text-xl'>Quản lý tuyến xe</span>
+                    <span className='text-xl'>Quản lý tuyến đường</span>
                   </div>
                 </NavLink>
                 <NavLink to='admin/bus'>

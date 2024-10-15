@@ -11,7 +11,7 @@ import fetchListStudents from '~/utils/fetchListStudents'
 dayjs.extend(customParseFormat)
 const dateFormat = 'YYYY-MM-DD'
 
-function ModalDetailBusRoute({ isModalOpen, setIsModalOpen, data }) {
+function ModalDetailBusRoute({ isModalOpen, setIsModalOpen, data, listChildren }) {
   const columns = [
     {
       title: 'Hình ảnh',
@@ -43,6 +43,29 @@ function ModalDetailBusRoute({ isModalOpen, setIsModalOpen, data }) {
       dataIndex: 'phone'
     }
   ]
+  const columnChildren = [
+    {
+      title: 'Hình ảnh',
+      dataIndex: 'avatar',
+      render: (data) => <img src={data || '/no-user.png'} className='size-11 rounded-full' />
+    },
+    {
+      title: 'Tên Học sinh',
+      dataIndex: 'fullName'
+    },
+    {
+      title: 'Tuổi',
+      dataIndex: 'age'
+    },
+    {
+      title: 'Lớp',
+      dataIndex: 'class'
+    },
+    {
+      title: 'Địa chỉ',
+      dataIndex: 'address'
+    }
+  ]
   const { currentUser } = useContext(AuthContext)
 
   const [dataDetail, setDataDetail] = useState({})
@@ -64,24 +87,23 @@ function ModalDetailBusRoute({ isModalOpen, setIsModalOpen, data }) {
   }
 
   const getListStudents = async () => {
-    console.log('start')
-
-    const res = await fetchListStudents({ ...data, studentIds: JSON.parse(data.studentIds) })
-    const newListStudent = await Promise.all(
-      res.map(async (item) => {
-        const parent = await userAPI.getDetailUser(item.parentId)
-        return {
-          ...item,
-          parentName: parent.fullName,
-          phone: parent.phone
-        }
-      })
-    )
-    console.log(newListStudent)
-
-    setListStudent(newListStudent)
+    try {
+      const res = await fetchListStudents({ ...data })
+      const newListStudent = await Promise.all(
+        res.map(async (item) => {
+          const parent = await userAPI.getDetailUser(item.parentId)
+          return {
+            ...item,
+            parentName: parent.fullName,
+            phone: parent.phone
+          }
+        })
+      )
+      setListStudent(newListStudent)
+    } catch (error) {
+      console.log(error)
+    }
   }
-  console.log(listStudent)
 
   useEffect(() => {
     getListStudents()
@@ -89,10 +111,10 @@ function ModalDetailBusRoute({ isModalOpen, setIsModalOpen, data }) {
   }, [data])
 
   return (
-    <Modal title='Chi tiết thông tin tuyến xe' width='60%' open={isModalOpen} onCancel={handleCancel}>
+    <Modal title='Chi tiết thông tin tuyến đường' width='60%' open={isModalOpen} onCancel={handleCancel}>
       <div className='grid grid-cols-4 gap-4'>
         <div>
-          <span>Tên tuyến xe</span>
+          <span>Tên tuyến đường</span>
           <Input value={dataDetail.route_name} />
         </div>
         <div>
@@ -145,6 +167,14 @@ function ModalDetailBusRoute({ isModalOpen, setIsModalOpen, data }) {
           <p className=' text-lg font-medium'>Danh sách học sinh</p>
           <div className=''>
             <Table columns={columns} dataSource={listStudent} />
+          </div>
+        </div>
+      )}
+      {currentUser.role === 'parent' && (
+        <div className='mt-4'>
+          <p className=' text-lg font-medium'>Danh sách học sinh</p>
+          <div className=''>
+            <Table columns={columnChildren} dataSource={listChildren} />
           </div>
         </div>
       )}

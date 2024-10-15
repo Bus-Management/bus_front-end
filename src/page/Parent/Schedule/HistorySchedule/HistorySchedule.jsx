@@ -2,6 +2,7 @@ import { Button, Table, Tag } from 'antd'
 import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import busRouteAPI from '~/api/busRouteAPI'
+import userAPI from '~/api/userAPI'
 import ModalDetailBusRoute from '~/page/Admin/BusRoute/ModalDetailBusRoute/ModalDetailBusRoute'
 
 function HistorySchedule() {
@@ -12,7 +13,7 @@ function HistorySchedule() {
       render: (data) => <img src={data || '/no-user.png'} className='h-10 w-12 rounded-full' />
     },
     {
-      title: 'Tên tuyến xe',
+      title: 'Tên tuyến đường',
       dataIndex: 'route_name'
     },
     {
@@ -67,18 +68,28 @@ function HistorySchedule() {
   ]
 
   const [listRoutesBus, setListRoutesBus] = useState([])
+  const [listChildrensAssigned, setListChildrensAssigned] = useState([])
   const [dataDetailModal, setDataDetailModal] = useState({})
   const [isModalDetailOpen, setIsModalDetailOpen] = useState(false)
 
   const handleShowModalDetail = (data) => {
     setIsModalDetailOpen(true)
     setDataDetailModal({ ...data, stops: JSON.parse(data.stops), start_point: JSON.parse(data.start_point), end_point: JSON.parse(data.end_point) })
+    fetchListStudentAssigned(data.id)
   }
 
   const fetchListRoutesBus = async () => {
     try {
       const res = await busRouteAPI.getRoutesAssignedStudentCompleted()
       setListRoutesBus(res)
+    } catch (error) {
+      toast.error(error.response.data.message)
+    }
+  }
+  const fetchListStudentAssigned = async (routeId) => {
+    try {
+      const childrens = await userAPI.getStudentAssignedRoute(routeId)
+      setListChildrensAssigned(childrens)
     } catch (error) {
       toast.error(error.response.data.message)
     }
@@ -95,7 +106,7 @@ function HistorySchedule() {
           <Table columns={columns} dataSource={listRoutesBus} />
         </div>
       </div>
-      <ModalDetailBusRoute isModalOpen={isModalDetailOpen} setIsModalOpen={setIsModalDetailOpen} data={dataDetailModal} />
+      <ModalDetailBusRoute isModalOpen={isModalDetailOpen} setIsModalOpen={setIsModalDetailOpen} data={dataDetailModal} listChildren={listChildrensAssigned} />
     </>
   )
 }

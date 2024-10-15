@@ -105,10 +105,10 @@ function ModalBusRoute({ isModalOpen, setIsModalOpen, fetchListRoutesBus, listBu
 
   return (
     <>
-      <Modal title={action === 'CREATE' ? 'Tuyến xe mới' : 'Cập nhật tuyến xe'} width='50%' open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+      <Modal title={action === 'CREATE' ? 'tuyến đường mới' : 'Cập nhật tuyến đường'} width='50%' open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
         <div className='grid grid-cols-3 gap-4'>
           <div>
-            <span>Tên tuyến xe</span>
+            <span>Tên tuyến đường</span>
             <Input value={dataBusRoute.route_name} onChange={(e) => handleChangeInput('route_name', e.target.value)} />
           </div>
           <div>

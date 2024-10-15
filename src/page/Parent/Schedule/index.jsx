@@ -75,7 +75,7 @@ function Schedule() {
 
   const columns = [
     {
-      title: 'Tên tuyến xe',
+      title: 'Tên tuyến đường',
       dataIndex: 'route_name'
     },
     {
@@ -131,13 +131,21 @@ function Schedule() {
   const handleView = async (data) => {
     setIsModalOpen(true)
     setDataDetail({ ...data, start_point: JSON.parse(data.start_point), end_point: JSON.parse(data.end_point) })
+    fetchListStudentAssigned(data.id)
   }
 
   const fetchListRoutesBus = async () => {
     try {
       const res = await busRouteAPI.getRoutesAssignedStudent()
-      const childrens = await userAPI.getAllChildrens()
       updateStatusRoutesBus(res, setListRoutesBus)
+    } catch (error) {
+      toast.error(error.response.data.message)
+    }
+  }
+
+  const fetchListStudentAssigned = async (routeId) => {
+    try {
+      const childrens = await userAPI.getStudentAssignedRoute(routeId)
       setListStudents(childrens)
     } catch (error) {
       toast.error(error.response.data.message)
@@ -153,7 +161,16 @@ function Schedule() {
       <div className='container py-4'>
         <Table columns={columns} dataSource={listRoutesBus} />
       </div>
-      <Modal width='50%' title='Theo dõi lịch trình' open={isModalOpen} onOk={() => setIsModalOpen(false)} onCancel={() => setIsModalOpen(false)}>
+      <Modal
+        width='50%'
+        title='Theo dõi lịch trình'
+        open={isModalOpen}
+        onOk={() => setIsModalOpen(false)}
+        onCancel={() => {
+          setDataDetail({})
+          setIsModalOpen(false)
+        }}
+      >
         <Table columns={columnStudents} dataSource={listStudents} />
         <MapBox pointA={dataDetail.start_point} pointB={dataDetail.end_point} />
       </Modal>
