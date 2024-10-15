@@ -15,11 +15,11 @@ import updateStatusRoutesBus from '~/utils/updateStatusRoutesBus'
 function Driver() {
   const columns = [
     {
-      title: 'ID Tuyến xe',
+      title: 'ID tuyến đường',
       dataIndex: 'id'
     },
     {
-      title: 'Tên tuyến xe',
+      title: 'Tên tuyến đường',
       dataIndex: 'route_name'
     },
     {
@@ -132,7 +132,7 @@ function Driver() {
       <div className='container'>
         <div className='mt-4'>
           <Button type='primary' className='mb-4' onClick={showModal}>
-            Tạo tuyến xe
+            Tạo tuyến đường
           </Button>
           <Table columns={columns} dataSource={listRoutesBus} />
         </div>

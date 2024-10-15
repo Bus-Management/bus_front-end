@@ -9,11 +9,11 @@ function HistoryRoute() {
   const { currentUser } = useContext(AuthContext)
   const columns = [
     {
-      title: 'ID Tuyến xe',
+      title: 'ID tuyến đường',
       dataIndex: 'id'
     },
     {
-      title: 'Tên tuyến xe',
+      title: 'Tên tuyến đường',
       dataIndex: 'route_name'
     },
     {
@@ -73,7 +73,13 @@ function HistoryRoute() {
 
   const handleShowModalDetail = (data) => {
     setIsModalDetailOpen(true)
-    setDataDetailModal({ ...data, stops: JSON.parse(data.stops), start_point: JSON.parse(data.start_point), end_point: JSON.parse(data.end_point) })
+    setDataDetailModal({
+      ...data,
+      stops: JSON.parse(data.stops),
+      studentIds: JSON.parse(data.studentIds),
+      start_point: JSON.parse(data.start_point),
+      end_point: JSON.parse(data.end_point)
+    })
   }
 
   const fetchListRoutesBus = async () => {
@@ -84,7 +90,6 @@ function HistoryRoute() {
       toast.error(error.response.data.message)
     }
   }
-  console.log(dataDetailModal)
 
   useEffect(() => {
     fetchListRoutesBus()

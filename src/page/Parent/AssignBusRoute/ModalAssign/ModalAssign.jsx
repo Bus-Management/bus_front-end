@@ -19,7 +19,7 @@ function ModalAssign({ isModalOpen, setIsModalOpen, data, fetchListRoutesBus }) 
   return (
     <>
       <Modal title='Xác đăng ký' open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-        <p>Bạn có chắc muốn đăng ký tuyến xe này ?</p>
+        <p>Bạn có chắc muốn đăng ký tuyến đường này ?</p>
       </Modal>
     </>
   )

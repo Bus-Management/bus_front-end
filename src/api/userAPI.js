@@ -45,6 +45,10 @@ const userAPI = {
     const url = '/user/parent'
     return axiosClient.get(url)
   },
+  getStudentAssignedRoute: (routeId) => {
+    const url = `/user/children-assigned-route-parent/${routeId}`
+    return axiosClient.get(url)
+  },
   createChildren: (data) => {
     const url = '/user/register-student'
     return axiosClient.post(url, data)

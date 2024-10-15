@@ -55,11 +55,11 @@ function Driver() {
 
   const columns = [
     {
-      title: 'ID Tuyến xe',
+      title: 'ID tuyến đường',
       dataIndex: 'id'
     },
     {
-      title: 'Tên tuyến xe',
+      title: 'Tên tuyến đường',
       dataIndex: 'route_name'
     },
     {

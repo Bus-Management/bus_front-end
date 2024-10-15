@@ -16,7 +16,7 @@ function AssignBusRoute() {
       render: (data) => <img src={data || '/no-user.png'} className='size-11 rounded-full' />
     },
     {
-      title: 'Tên tuyến xe',
+      title: 'Tên tuyến đường',
       dataIndex: 'route_name'
     },
     {
